@@ -12,6 +12,11 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Hooks {
             return new ChainConnection (ParentProgram);
         }
 
+        public ChainHook (Program _parentProgram, Node _parent, Direction _direction, string _name, string _description) : this (_parentProgram, _parent, _direction) {
+            Name = _name;
+            Description = _description;
+        }
+
         public ChainHook(Program _parentProgram, Node _parent, Direction _direction) : base (_parentProgram, _parent, _direction, 0) {
 
             Direction = _direction;

@@ -7,8 +7,8 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes {
 
     public abstract class Node : FlowchartElement, INamed, IDeletable {
 
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public virtual string Name { get; set; }
+        public virtual string Description { get; set; }
 
         public Vector2 Position { get; set; }
         public uint LastActiveTick { get; set; }
@@ -23,7 +23,8 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes {
         }
 
         public Node (Program _parentProgram) : base (_parentProgram) {
-            ParentProgram.AddNode (this);
+            if (ParentProgram)
+                ParentProgram.AddNode (this);
         }
     }
 }

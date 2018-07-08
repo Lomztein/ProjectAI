@@ -1,5 +1,6 @@
 ﻿using Lomztein.ProjectAI.Flowchart;
 using Lomztein.ProjectAI.Flowchart.Nodes;
+using Lomztein.ProjectAI.Flowchart.Nodes.Flow;
 using Lomztein.ProjectAI.Flowchart.Nodes.Hooks;
 using Lomztein.ProjectAI.Flowchart.Nodes.Prefabs;
 using Lomztein.ProjectAI.UI.Editor.ProgramEditor;
@@ -17,6 +18,9 @@ namespace Lomztein.ProjectAI.Unit {
 
         public Program Program { get; set; }
 
+        // Unity references.
+        public GameObject deathParticle;
+
         // Testing related stuff, remove later.
         public ProgramEditor programEditor;
 
@@ -33,11 +37,21 @@ namespace Lomztein.ProjectAI.Unit {
             Program.AddEvent ("Begin", "Runs when the the unit is first constructed.");
             Program.AddEvent ("Tick", "Runs " + Executor.TickRate + " times per second.", new OutputHook (null, null, "Delta Time", "The time between last and current tick.", typeof (float)));
             Program.AddEvent ("Destroyed", "Runs when the the unit is destroyed for whatever reason.", new OutputHook (null, null, "Destroyer", "The unit that destroyed this unit.", typeof (Unit)));
+            Program.AddEvent ("Test", "Runs whenever the test button is clicked.");
 
             Executor.CurrentExecutor.AddProgram (Program);
 
             programEditor.Initialize ();
 
+        }
+
+        public void MoveForwards () {
+            transform.position += transform.forward * Time.fixedDeltaTime;
+        }
+
+        public void Rotate (int sign) {
+            sign = (int)Mathf.Sign (sign);
+            transform.Rotate (transform.up, 30 * Time.fixedDeltaTime * sign);
         }
 
         public void Damage (float damage) {
@@ -46,6 +60,7 @@ namespace Lomztein.ProjectAI.Unit {
 
         public void Kill () {
             Destroy (gameObject);
+            Instantiate (deathParticle, transform.position, Quaternion.identity);
         }
 
         private void OnDestroy() {
@@ -60,14 +75,23 @@ namespace Lomztein.ProjectAI.Unit {
             return gathering.PrefabList.ToArray ();
         }
 
-        public void GatherNodePrefabs (PrefabGathering prefabGathering) {
+        public void OnTestButton () {
+            Program.ExecuteEvent ("Test");
+        }
+
+        public void GatherNodePrefabs(PrefabGathering prefabGathering) {
             prefabGathering.AddActions (new List<INodePrefab> () {
-                new ActionNodePrefab ("Suicide", "Kill self out of pure shame of being alive.", new ProgramAction ((input, output) => Kill ())
-                .AddInput (typeof (bool), "Certain?", "Are you certain that you can go through with this?")
-                .AddInput (typeof (int), "Selfshots", "The amount of shots you will shoot yourself with.")
-                .AddOutput (typeof (bool), "Success", "Were you succesful in taking your own life?")),
+            new ActionNodePrefab ("Sudoku", "Commit sudoku out of shame.", new ProgramAction ((input, output) => Kill ())),
             new ActionNodePrefab ("Log", "Log the given input.", new ProgramAction ((input, output) => Debug.Log (input.Get<string> ("Text"))).AddInput (typeof (string), "Text", "The text to print.")),
             new ActionNodePrefab ("Add", "Add together the two numbers.", new ProgramAction ((input, output) => output.Set ("Result", input.Get<float> ("Num1") + input.Get<float>("Num2"))).AddInput (typeof (float), "Num1", "The first number.").AddInput (typeof (float), "Num2", "The second number.").AddOutput (typeof (float), "Result", "The resulting number.")),
+
+            // Movement test actions
+            new ActionNodePrefab ("Move Forwards", "Move slightly forwards.", new ProgramAction ((input, output) => MoveForwards ())),
+            new ActionNodePrefab ("Turn", "Turn a direction", new ProgramAction ((input, output) => Rotate (input.Get<int> ("Sign"))).AddInput (typeof (int), "Sign", "Sign of the direction to turn.")),
+            // End of movement test actions.
+
+            new FlowNodePrefab (typeof (IfFlowNode)),
+            new FlowNodePrefab (typeof (DurationFlowNode)),
             });
         }
 

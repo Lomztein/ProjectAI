@@ -1,5 +1,6 @@
 ﻿using Lomztein.ProjectAI.Flowchart;
 using Lomztein.ProjectAI.Flowchart.Nodes;
+using Lomztein.ProjectAI.Flowchart.Nodes.Flow;
 using Lomztein.ProjectAI.Flowchart.Nodes.Hooks;
 using Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.Attachments;
 using Lomztein.ProjectAI.Unity;
@@ -16,6 +17,7 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.Widgets {
 
         public static Resource<GameObject> LeftHookElement = new Resource<GameObject> ("UI/Flowchart/LeftHookWidget");
         public static Resource<GameObject> RightHookElement = new Resource<GameObject> ("UI/Flowchart/RightHookWidget");
+        public static Resource<GameObject> FlowOutputElement = new Resource<GameObject> ("UI/Flowchart/FlowOutputHook");
 
         public Vector2 Position { get { return transform.position; } set { transform.position = value; } }
 
@@ -33,6 +35,7 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.Widgets {
 
         public RectTransform inputParent;
         public RectTransform outputParent;
+        public RectTransform flowOutputParent;
 
         public void Initialize (Node node) {
 
@@ -60,12 +63,34 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.Widgets {
 
             if (Node is IHasInput) {
                 IHasInput inNode = Node as IHasInput;
-                CreateIOHooks (inputParent, LeftHookElement.Get (), inNode.InputHooks);
+                if (inNode.InputHooks != null)
+                    CreateIOHooks (inputParent, LeftHookElement.Get (), inNode.InputHooks);
+                else
+                    Destroy (inputParent.gameObject);
+            } else {
+                Destroy (inputParent.gameObject);
             }
+
 
             if (Node is IHasOutput) {
                 IHasOutput outNode = Node as IHasOutput;
-                CreateIOHooks (outputParent, RightHookElement.Get (), outNode.OutputHooks);
+                if (outNode.OutputHooks != null)
+                    CreateIOHooks (outputParent, RightHookElement.Get (), outNode.OutputHooks);
+                else
+                    Destroy (outputParent.gameObject);
+            } else {
+                Destroy (outputParent.gameObject);
+            }
+
+            if (Node is IFlowNode) {
+                IFlowNode flowNode = Node as IFlowNode;
+
+                foreach (var output in flowNode.PossibleRoutes) {
+                    GameObject newHook = Instantiate (FlowOutputElement.Get (), flowOutputParent);
+                    newHook.GetComponent<HookAttachment> ().Initialize (output, Color.white);
+                }
+            } else {
+                Destroy (flowOutputParent.gameObject);
             }
 
         }

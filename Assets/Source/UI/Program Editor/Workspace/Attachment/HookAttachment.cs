@@ -22,10 +22,12 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.Attachments {
         public Image image;
 
         public void Initialize (IHook hook, Color color) {
-            Hook = hook;
-            text.text = hook.Name;
-            image.color = color;
 
+            Hook = hook;
+
+            if (text)
+                text.text = hook.Name;
+            image.color = color;
             button.onClick.AddListener (() => OnClicked ());
         }
 

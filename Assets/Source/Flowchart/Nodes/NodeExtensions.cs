@@ -1,4 +1,5 @@
-﻿using Lomztein.ProjectAI.Flowchart.Nodes.Hooks;
+﻿using Lomztein.ProjectAI.Flowchart.Nodes.Flow;
+using Lomztein.ProjectAI.Flowchart.Nodes.Hooks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,6 +41,10 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes {
         public static IHasOutput SetOutputs(this IHasOutput outputNode, params OutputHook[] outputs) {
             outputNode.OutputHooks = outputs;
             return outputNode;
+        }
+
+        public static ChainHook GetHook (this IFlowNode node, string name) {
+            return node.PossibleRoutes.First (x => x.Name == name);
         }
     }
 }
