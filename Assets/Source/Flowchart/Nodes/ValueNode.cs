@@ -14,11 +14,11 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes {
         public OutputHook Output { get { return OutputHooks.Single (); } set { OutputHooks[0] = value; } }
         public OutputHook[] OutputHooks { get; set; }
 
-        public ValueNode (Program _parentProgram, object _value, Type _valueType) : this (_parentProgram, _valueType) {
+        public ValueNode (Program _parentProgram, object _value, Type _valueType, INodePosition position) : this (_parentProgram, _valueType, position) {
             Value = _value;
         }
 
-        public ValueNode(Program _parentProgram, Type _valueType) : base(_parentProgram) {
+        public ValueNode(Program _parentProgram, Type _valueType, INodePosition position) : base(_parentProgram, position) {
             OutputHooks = new OutputHook[1];
             Output = new OutputHook (_parentProgram, this, "Value", "Contains a singular, constant value.", _valueType);
 

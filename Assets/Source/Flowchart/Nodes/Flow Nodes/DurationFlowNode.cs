@@ -30,7 +30,7 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Flow {
 
         private List<Instance> Instances { get; set; }
 
-        public DurationFlowNode (Program _parentProgram) : base (_parentProgram) {
+        public DurationFlowNode (Program _parentProgram, INodePosition position) : base (_parentProgram, position) {
 
             this.SetInputs (new InputHook (ParentProgram, this, "Duration", "The duration in ticks that this will run.", typeof (int)));
             this.SetOutputs (new OutputHook (ParentProgram, this, "Counter", "The counter of the last execution instance.", typeof (int)));

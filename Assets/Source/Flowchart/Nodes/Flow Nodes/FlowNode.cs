@@ -15,7 +15,7 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Flow {
         public ChainHook NextHook { get; set; }
         public ChainHook[] PossibleRoutes { get; set; }
 
-        public FlowNode (Program _parent) : base (_parent) {
+        public FlowNode (Program _parent, INodePosition position) : base (_parent, position) {
             PreviousHook = new ChainHook (_parent, this, Direction.In);
             NextHook = new ChainHook (_parent, this, Direction.Out);
         }

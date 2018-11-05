@@ -9,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
+using Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.NodeComponents;
 
 namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor {
 
@@ -27,6 +29,7 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor {
         private Dictionary<WorkspaceElement, ErrorSign> ActiveErrorSigns { get; set; }
 
         // Unity-related references.
+        public GameObject[] NodeWidgetComponents;
         public RectTransform nodePrefabList;
         public RectTransform eventParent;
         public GameObject toEdit;
@@ -36,6 +39,7 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor {
 
         public void Awake() {
             CurrentEditor = this;
+            NodeWidgetComponents = NodeWidgetComponents.ToList().OrderBy(x => x.GetComponent<NodeComponent>().Depth).ToArray();
         }
 
         public void AddElement (WorkspaceElement element) {
