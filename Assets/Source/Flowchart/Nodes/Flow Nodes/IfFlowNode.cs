@@ -27,7 +27,7 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Flow {
             }
         }
 
-        public IfFlowNode(Program _parent) : base (_parent) {
+        public IfFlowNode(Program _parent, INodePosition position) : base (_parent, position) {
 
             this.SetInputs (new InputHook (ParentProgram, this, "Condition", "The condition that decides which path execution will continue on.", typeof (bool)));
             SetRoutes (

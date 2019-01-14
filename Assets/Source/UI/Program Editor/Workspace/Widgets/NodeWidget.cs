@@ -3,6 +3,7 @@ using Lomztein.ProjectAI.Flowchart.Nodes;
 using Lomztein.ProjectAI.Flowchart.Nodes.Flow;
 using Lomztein.ProjectAI.Flowchart.Nodes.Hooks;
 using Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.Attachments;
+using Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.NodeComponents;
 using Lomztein.ProjectAI.Unity;
 using System;
 using System.Collections.Generic;
@@ -15,9 +16,8 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.Widgets {
 
     public class NodeWidget : Widget {
 
-        public static Resource<GameObject> LeftHookElement = new Resource<GameObject> ("UI/Flowchart/LeftHookWidget");
-        public static Resource<GameObject> RightHookElement = new Resource<GameObject> ("UI/Flowchart/RightHookWidget");
-        public static Resource<GameObject> FlowOutputElement = new Resource<GameObject> ("UI/Flowchart/FlowOutputHook");
+        public static GameObject[] AvailableNodeComponents => ProgramEditor.CurrentEditor.NodeWidgetComponents;
+        public NodeComponent[] Components { get; private set; }
 
         public Vector2 Position { get { return transform.position; } set { transform.position = value; } }
 
@@ -29,69 +29,24 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.Widgets {
         public Text nameHeader;
         public Button dragButton;
 
-        public HookAttachment chainInput;
-        public HookAttachment chainOutput;
-        public RectTransform chainIOParent;
-
-        public RectTransform inputParent;
-        public RectTransform outputParent;
-        public RectTransform flowOutputParent;
-
         public void Initialize (Node node) {
 
             Node = node;
-            nameHeader.text = Node.Name;
             Node.OnDeleted += () => { Destroy (gameObject); };
 
-            bool anyChainIO = false;
-            if (Node is IPrevNode) {
-                IPrevNode pNode = Node as IPrevNode;
-                chainOutput.Initialize (pNode.NextHook, Color.white);
-                anyChainIO = true;
-            } else
-                Destroy (chainOutput.gameObject);
-
-            if (Node is INextNode) {
-                INextNode nNode = Node as INextNode;
-                chainInput.Initialize (nNode.PreviousHook, Color.white);
-                anyChainIO = true;
-            } else
-                Destroy (chainInput.gameObject);
-
-            if (!anyChainIO)
-                Destroy (chainIOParent);
-
-            if (Node is IHasInput) {
-                IHasInput inNode = Node as IHasInput;
-                if (inNode.InputHooks != null)
-                    CreateIOHooks (inputParent, LeftHookElement.Get (), inNode.InputHooks);
-                else
-                    Destroy (inputParent.gameObject);
-            } else {
-                Destroy (inputParent.gameObject);
-            }
-
-
-            if (Node is IHasOutput) {
-                IHasOutput outNode = Node as IHasOutput;
-                if (outNode.OutputHooks != null)
-                    CreateIOHooks (outputParent, RightHookElement.Get (), outNode.OutputHooks);
-                else
-                    Destroy (outputParent.gameObject);
-            } else {
-                Destroy (outputParent.gameObject);
-            }
-
-            if (Node is IFlowNode) {
-                IFlowNode flowNode = Node as IFlowNode;
-
-                foreach (var output in flowNode.PossibleRoutes) {
-                    GameObject newHook = Instantiate (FlowOutputElement.Get (), flowOutputParent);
-                    newHook.GetComponent<HookAttachment> ().Initialize (output, Color.white);
+            List<NodeComponent> createdComponents = new List<NodeComponent>();
+            foreach (GameObject possibleComponentObject in AvailableNodeComponents)
+            {
+                NodeComponent possibleComponent = possibleComponentObject.GetComponent<NodeComponent>();
+                if (possibleComponent.IsApplicable(Node))
+                {
+                    NodeComponent newComponent = Instantiate(possibleComponentObject, transform).GetComponent<NodeComponent>();
+                    newComponent.ParentWidget = this;
+                    newComponent.LoadFrom(Node);
+                    createdComponents.Add(newComponent);
                 }
-            } else {
-                Destroy (flowOutputParent.gameObject);
             }
+            Components = createdComponents.ToArray();
 
         }
 

@@ -5,12 +5,12 @@ using UnityEngine;
 
 namespace Lomztein.ProjectAI.Flowchart.Nodes {
 
-    public abstract class Node : FlowchartElement, INamed, IDeletable {
+    public abstract partial class Node : FlowchartElement, INamed, IDeletable {
 
         public virtual string Name { get; set; }
         public virtual string Description { get; set; }
 
-        public Vector2 Position { get; set; }
+        public INodePosition Position { get; private set; }
         public uint LastActiveTick { get; set; }
 
         public event OnDeletedEvent OnDeleted;
@@ -22,9 +22,10 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes {
             ParentProgram.RemoveNode (this);
         }
 
-        public Node (Program _parentProgram) : base (_parentProgram) {
+        public Node (Program _parentProgram, INodePosition position) : base (_parentProgram) {
             if (ParentProgram)
                 ParentProgram.AddNode (this);
+            Position = position;
         }
     }
 }

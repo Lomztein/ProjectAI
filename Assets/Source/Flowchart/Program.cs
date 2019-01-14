@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Lomztein.ProjectAI.UI.Editor.ProgramEditor;
 
 namespace Lomztein.ProjectAI.Flowchart {
 
@@ -20,7 +21,7 @@ namespace Lomztein.ProjectAI.Flowchart {
 
         public EventNode AddEvent (string eventName, string eventDescription, params OutputHook[] outputs) {
 
-            EventNode eventNode = new EventNode (this, outputs) { Name = eventName, Description = eventDescription };
+            EventNode eventNode = new EventNode (this, new VectorPosition (0, 0), outputs) { Name = eventName, Description = eventDescription };
 
             foreach (OutputHook hook in outputs) {
                 hook.ParentProgram = this;

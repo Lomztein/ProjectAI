@@ -1,4 +1,5 @@
 ﻿using Lomztein.ProjectAI.Flowchart.Nodes.Hooks;
+using Lomztein.ProjectAI.UI.Editor.ProgramEditor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Prefabs {
 
         public Node Create(Program parentProgram) {
 
-            ActionNode node = new ActionNode (parentProgram, Action);
+            ActionNode node = new ActionNode (parentProgram, Action, new VectorPosition (0, 0));
             this.CopyTo (node);
 
             InputHook[] inputs = new InputHook[Action.Inputs.Count];

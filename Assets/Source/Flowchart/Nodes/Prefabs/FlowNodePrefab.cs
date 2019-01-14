@@ -1,5 +1,6 @@
 ﻿using Lomztein.ProjectAI.Flowchart.Nodes.Flow;
 using Lomztein.ProjectAI.Flowchart.Nodes.Hooks;
+using Lomztein.ProjectAI.UI.Editor.ProgramEditor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Prefabs {
         }
 
         public Node Create(Program parentProgram) {
-            FlowNode node = Activator.CreateInstance (FlowNodeType, parentProgram as object) as FlowNode;
+            FlowNode node = Activator.CreateInstance (FlowNodeType, parentProgram, new VectorPosition (0, 0)) as FlowNode;
             return node;
         }
     }

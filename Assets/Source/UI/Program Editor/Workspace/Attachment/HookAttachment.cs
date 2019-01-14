@@ -11,6 +11,9 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.Attachments {
 
     public class HookAttachment : Attachment {
 
+        public static Resource<GameObject> LeftHookWidget = new Resource<GameObject>("UI/Flowchart/LeftHookWidget");
+        public static Resource<GameObject> RightHookWidget = new Resource<GameObject>("UI/Flowchart/RightHookWidget");
+
         public override IFlowchartElement InnerElement { get { return Hook; } }
         public IHook Hook { get; set; }
 

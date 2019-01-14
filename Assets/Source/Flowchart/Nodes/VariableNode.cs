@@ -7,7 +7,7 @@ using System.Text;
 namespace Lomztein.ProjectAI.Flowchart.Nodes {
     class VariableNode : Node, INextNode {
 
-        public VariableNode(Program _parentProgram) : base (_parentProgram) { }
+        public VariableNode(Program _parentProgram, INodePosition position) : base (_parentProgram, position) { }
 
         public ChainHook PreviousHook { get; set; }
 

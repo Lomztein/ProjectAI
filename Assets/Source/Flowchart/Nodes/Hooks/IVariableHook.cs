@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Lomztein.ProjectAI.Flowchart.Nodes.Hooks {
 
-    public interface IVariableHook {
+    public interface IVariableHook : IHook {
 
         object Value { get; set; }
         Type ValueType { get; set; }
