@@ -15,7 +15,7 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor {
 
         public INodePrefab Prefab { get; private set; }
 
-        public static Resource<GameObject> NodeElement = new Resource<GameObject> ("UI/Flowchart/NodeWidget");
+        public static Resource<GameObject> NodeElement = new Resource<GameObject> ("UI/Flowchart/Node Components/NodeWidget");
 
         private RectTransform ParentWorkspace { get; set; }
 

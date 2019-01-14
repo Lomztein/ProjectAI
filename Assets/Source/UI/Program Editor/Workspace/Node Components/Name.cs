@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Lomztein.ProjectAI.Flowchart;
+using Lomztein.ProjectAI.Flowchart.Nodes;
 using UnityEngine.UI;
 
 namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.NodeComponents
@@ -13,7 +14,7 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.NodeComponents
 
         public Text NameText;
 
-        public override void LoadFrom(IFlowchartElement source)
+        public override void LoadFrom(Node source)
         {
             // Easier than using if (source is INamed named)? Not really, but it does catch any errors that are unlikely to ever happen anyways.
             Preconditions.IsType (source, out INamed named);

@@ -37,13 +37,12 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.Widgets {
             List<NodeComponent> createdComponents = new List<NodeComponent>();
             foreach (GameObject possibleComponentObject in AvailableNodeComponents)
             {
-                Debug.Log(possibleComponentObject);
                 NodeComponent possibleComponent = possibleComponentObject.GetComponent<NodeComponent>();
-                if (possibleComponent.IsApplicable(InnerElement))
+                if (possibleComponent.IsApplicable(Node))
                 {
                     NodeComponent newComponent = Instantiate(possibleComponentObject, transform).GetComponent<NodeComponent>();
                     newComponent.ParentWidget = this;
-                    newComponent.LoadFrom(InnerElement);
+                    newComponent.LoadFrom(Node);
                     createdComponents.Add(newComponent);
                 }
             }

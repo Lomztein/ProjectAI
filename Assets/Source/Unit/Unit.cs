@@ -80,7 +80,7 @@ namespace Lomztein.ProjectAI.Unit {
         }
 
         public void GatherNodePrefabs(PrefabGathering prefabGathering) {
-            prefabGathering.AddActions (new List<INodePrefab> () {
+            prefabGathering.AddActions(new List<INodePrefab>() {
             new ActionNodePrefab ("Sudoku", "Commit sudoku out of shame.", new ProgramAction ((input, output) => Kill ())),
             new ActionNodePrefab ("Log", "Log the given input.", new ProgramAction ((input, output) => Debug.Log (input.Get<string> ("Text"))).AddInput (typeof (string), "Text", "The text to print.")),
             new ActionNodePrefab ("Add", "Add together the two numbers.", new ProgramAction ((input, output) => output.Set ("Result", input.Get<float> ("Num1") + input.Get<float>("Num2"))).AddInput (typeof (float), "Num1", "The first number.").AddInput (typeof (float), "Num2", "The second number.").AddOutput (typeof (float), "Result", "The resulting number.")),
@@ -88,6 +88,7 @@ namespace Lomztein.ProjectAI.Unit {
             // Movement test actions
             new ActionNodePrefab ("Move Forwards", "Move slightly forwards.", new ProgramAction ((input, output) => MoveForwards ())),
             new ActionNodePrefab ("Turn", "Turn a direction", new ProgramAction ((input, output) => Rotate (input.Get<int> ("Sign"))).AddInput (typeof (int), "Sign", "Sign of the direction to turn.")),
+            new ActionNodePrefab ("Fly", "Begone, thot!", new ProgramAction ((input, output) => transform.Translate (Vector3.up * input.Get<float>("Speed") * Time.deltaTime)).AddInput (typeof (float), "Speed", "The speed of begoneness")),
             // End of movement test actions.
 
             new FlowNodePrefab (typeof (IfFlowNode)),

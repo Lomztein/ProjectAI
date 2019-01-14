@@ -21,7 +21,7 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.NodeComponents
 
         public override int Depth => -1;
 
-        public override void LoadFrom(IFlowchartElement source)
+        public override void LoadFrom(Node source)
         {
             if (source is INextNode next)
             {

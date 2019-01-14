@@ -1,4 +1,5 @@
 ﻿using Lomztein.ProjectAI.Flowchart;
+using Lomztein.ProjectAI.Flowchart.Nodes;
 using Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.Widgets;
 using System;
 using System.Collections;
@@ -15,7 +16,7 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.NodeComponents
 
         public NodeWidget ParentWidget { get; set; }
 
-        public abstract void LoadFrom(IFlowchartElement source);
+        public abstract void LoadFrom(Node source);
 
         public bool IsApplicable (object obj)
             => ApplicableTypes.Any(x => x.IsInstanceOfType(obj));
