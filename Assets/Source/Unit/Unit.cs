@@ -11,7 +11,7 @@ namespace Lomztein.ProjectAI.Unit {
 
     public class Unit : MonoBehaviour, IProgrammable, IDamageable, IKillable, INamed {
 
-        public string Name { get; set; }
+        public string Name { get => name; set => name = value; }
         public string Description { get; set; }
 
         public float Health { get; set; }
@@ -35,8 +35,8 @@ namespace Lomztein.ProjectAI.Unit {
         private void Start() {
 
             Program.AddEvent ("Begin", "Runs when the the unit is first constructed.");
-            Program.AddEvent ("Tick", "Runs " + Executor.TickRate + " times per second.", new OutputHook (null, null, "Delta Time", "The time between last and current tick.", typeof (float)));
-            Program.AddEvent ("Destroyed", "Runs when the the unit is destroyed for whatever reason.", new OutputHook (null, null, "Destroyer", "The unit that destroyed this unit.", typeof (Unit)));
+            Program.AddEvent ("Tick", "Runs " + Executor.TickRate + " times per second.", new OutputHook ().SetType (typeof(float)).SetName ("Delta Time").SetDesc ("The time between last and current tick.").SetProgram (Program) as OutputHook);
+            Program.AddEvent ("Destroyed", "Runs when the the unit is destroyed for whatever reason.", new OutputHook().SetType(typeof(Unit)).SetName("Destroyer").SetDesc("The one responsible.").SetProgram(Program) as OutputHook);
             Program.AddEvent ("Test", "Runs whenever the test button is clicked.");
 
             Executor.CurrentExecutor.AddProgram (Program);
@@ -81,18 +81,18 @@ namespace Lomztein.ProjectAI.Unit {
 
         public void GatherNodePrefabs(PrefabGathering prefabGathering) {
             prefabGathering.AddActions(new List<INodePrefab>() {
-            new ActionNodePrefab ("Sudoku", "Commit sudoku out of shame.", new ProgramAction ((input, output) => Kill ())),
-            new ActionNodePrefab ("Log", "Log the given input.", new ProgramAction ((input, output) => Debug.Log (input.Get<string> ("Text"))).AddInput (typeof (string), "Text", "The text to print.")),
-            new ActionNodePrefab ("Add", "Add together the two numbers.", new ProgramAction ((input, output) => output.Set ("Result", input.Get<float> ("Num1") + input.Get<float>("Num2"))).AddInput (typeof (float), "Num1", "The first number.").AddInput (typeof (float), "Num2", "The second number.").AddOutput (typeof (float), "Result", "The resulting number.")),
+            new ActionNodePrefab ("Sudoku", "Commit sudoku out of shame.", "Unit.Suicide", new ProgramAction ((input, output) => Kill ())),
+            new ActionNodePrefab ("Log", "Log the given input.", "Log.Write", new ProgramAction ((input, output) => Debug.Log (input.Get<string> ("Text"))).AddInput (typeof (string), "Text", "The text to print.")),
+            new ActionNodePrefab ("Add", "Add together the two numbers.", "Math.Add", new ProgramAction ((input, output) => output.Set ("Result", input.Get<float> ("Num1") + input.Get<float>("Num2"))).AddInput (typeof (float), "Num1", "The first number.").AddInput (typeof (float), "Num2", "The second number.").AddOutput (typeof (float), "Result", "The resulting number.")),
 
             // Movement test actions
-            new ActionNodePrefab ("Move Forwards", "Move slightly forwards.", new ProgramAction ((input, output) => MoveForwards ())),
-            new ActionNodePrefab ("Turn", "Turn a direction", new ProgramAction ((input, output) => Rotate (input.Get<int> ("Sign"))).AddInput (typeof (int), "Sign", "Sign of the direction to turn.")),
-            new ActionNodePrefab ("Fly", "Begone, thot!", new ProgramAction ((input, output) => transform.Translate (Vector3.up * input.Get<float>("Speed") * Time.deltaTime)).AddInput (typeof (float), "Speed", "The speed of begoneness")),
+            new ActionNodePrefab ("Move Forwards", "Move slightly forwards.", "Unit.MoveForwards", new ProgramAction ((input, output) => MoveForwards ())),
+            new ActionNodePrefab ("Turn", "Turn a direction", "Unit.Turn", new ProgramAction ((input, output) => Rotate (input.Get<int> ("Sign"))).AddInput (typeof (int), "Sign", "Sign of the direction to turn.")),
+            new ActionNodePrefab ("Fly", "Begone, thot!", "Unit.Fly", new ProgramAction ((input, output) => transform.Translate (Vector3.up * input.Get<float>("Speed") * Time.deltaTime)).AddInput (typeof (float), "Speed", "The speed of begoneness")),
             // End of movement test actions.
 
-            new FlowNodePrefab (typeof (IfFlowNode)),
-            new FlowNodePrefab (typeof (DurationFlowNode)),
+            new FlowNodePrefab (typeof (IfFlowNode), "If", "Control flow of execution with a bool value."),
+            new FlowNodePrefab (typeof (DurationFlowNode), "Duration", "Execute something for a duration."),
             });
         }
 
