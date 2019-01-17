@@ -12,9 +12,24 @@ namespace Lomztein.ProjectAI.Sim
         public int ticksPerSecond = 50;
         private float tickBacklog;
 
-        public new GameObject Instantiate (GameObject obj, Vector3 position, Quaternion rotation)
+        private void Awake()
         {
-            GameObject gameObject = GameObject.Instantiate(obj, position, rotation);
+            CacheFromWorld();
+        }
+
+        public void CacheFromWorld ()
+        {
+            SimObject[] all = FindObjectsOfType<SimObject>();
+            foreach (SimObject obj in all)
+            {
+                obj.Init(this);
+                AddObject(obj);
+            }
+        }
+
+        public SimObject Instantiate(GameObject obj, Vector3 position, Quaternion rotation)
+        {
+            GameObject gameObject = Object.Instantiate(obj, position, rotation);
             SimObject[] simObjects = gameObject.GetComponentsInChildren<SimObject>();
             if (simObjects.Length == 0)
             {
@@ -23,21 +38,24 @@ namespace Lomztein.ProjectAI.Sim
             foreach (SimObject simObject in simObjects)
             {
                 simObject.Init(this);
-                AddObject (simObject);
+                AddObject(simObject);
             }
+            return simObjects[0];
         }
 
         private void FixedUpdate()
         {
             float deltaTime = Time.fixedDeltaTime;
 
-            tickBacklog += ticksPerSecond / deltaTime;
+            tickBacklog += deltaTime * ticksPerSecond;
             int toTick = Mathf.FloorToInt(tickBacklog);
 
             for (int i = 0; i < toTick; i++)
             {
                 Tick(deltaTime);
             }
+
+            tickBacklog = 0;
         }
 
         private void Tick (float deltaTime)
