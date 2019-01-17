@@ -14,9 +14,10 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes {
 
         public OutputHook[] OutputHooks { get; set; }
 
-        public EventNode (Program _parent, INodePosition position, params OutputHook[] _outputs) : base (_parent, position) {
-            NextHook = new ChainHook (_parent, this, Direction.Out);
-            OutputHooks = _outputs;
+        public EventNode SetOutputs (params OutputHook[] outputs)
+        {
+            NodeExtensions.SetOutputs(this, outputs);
+            return this;
         }
 
         public void Execute(ExecutionMetadata metadata) {
@@ -31,6 +32,17 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes {
             NextHook.DisconnectAll ();
 
             base.Delete ();
+        }
+
+        public override void InitChildren()
+        {
+            NextHook = new ChainHook()
+                .SetNode(this)
+                .SetDirection(Direction.Out)
+                .SetProgram(ParentProgram) as ChainHook;
+
+            NextHook.Init();
+            OutputHooks.InitAll();
         }
     }
 }

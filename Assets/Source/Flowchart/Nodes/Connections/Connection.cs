@@ -1,4 +1,5 @@
 ﻿using Lomztein.ProjectAI.Flowchart.Nodes.Hooks;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,8 +21,6 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Connections {
             return (HookType.IsInstanceOfType (one) && HookType.IsInstanceOfType (two));
         }
 
-        public Connection (Program _parent) : base (_parent) { }
-
         public virtual void Delete() {
 
             From.Disconnect (this, false);
@@ -29,6 +28,22 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Connections {
 
             if (OnDeleted != null)
                 OnDeleted ();
+        }
+
+        public void Deserialize(JObject source)
+        {
+            throw new NotImplementedException();
+        }
+
+        public JObject Serialize()
+        {
+            return new JObject()
+            {
+                { "FromNode", 0 },
+                { "FromHook", 0 },
+                { "ToNode", 0 },
+                { "ToHook", 0 }
+            };
         }
     }
 }

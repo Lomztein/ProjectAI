@@ -9,19 +9,12 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Hooks {
     public class ChainHook : Hook {
 
         public override IConnection CreateConnection() {
-            return new ChainConnection (ParentProgram);
+            return new ChainConnection ().SetProgram (ParentProgram) as ChainConnection;
         }
 
-        public ChainHook (Program _parentProgram, Node _parent, Direction _direction, string _name, string _description) : this (_parentProgram, _parent, _direction) {
-            Name = _name;
-            Description = _description;
-        }
+        public override void Init () {
 
-        public ChainHook(Program _parentProgram, Node _parent, Direction _direction) : base (_parentProgram, _parent, _direction, 0) {
-
-            Direction = _direction;
-
-            switch (_direction) {
+            switch (Direction) {
                 case Direction.In:
                     Name = "Chain Input";
                     Description = "Hook a chain output up to this, in order to chain those two together.";

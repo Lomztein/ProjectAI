@@ -45,6 +45,12 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Hooks {
             }
         }
 
+        public static void InitAll (this IEnumerable<IHook> hooks)
+        {
+            foreach (IHook hook in hooks)
+                hook.Init();
+        }
+
         public static void EnqueueAndExecuteNextNextNodes(this ChainHook chainHook) {
             Executor.EnqueueAllOnCurrent (chainHook.GetConnectedNodes<INextNode> ());
             Executor.CurrentExecutor.ExecuteAll ();

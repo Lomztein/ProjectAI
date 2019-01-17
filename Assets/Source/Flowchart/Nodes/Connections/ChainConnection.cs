@@ -8,8 +8,6 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Connections {
 
     public class ChainConnection : Connection {
 
-        public ChainConnection(Program _parent) : base (_parent) { }
-
         public override Type HookType { get { return typeof (ChainHook); } }
 
     }

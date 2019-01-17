@@ -12,21 +12,20 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Prefabs {
 
         public string Name { get; set; }
         public string Description { get; set; }
+        public string Identifier { get; set; }
 
         private Type FlowNodeType { get; set; }
 
-        public FlowNodePrefab (Type flowNodeType) {
+        public FlowNodePrefab (Type flowNodeType, string name, string desc) {
             FlowNodeType = flowNodeType;
-            GetNameAndDesc ();
-        }
-
-        private void GetNameAndDesc () { // This is a very hacky solution, see if you can't figure out something more clever in the long run, perhaps with constants or something.
-            Node node = Create (null);
-            node.CopyTo (this);
+            Name = name;
+            Description = desc;
+            Identifier = FlowNodeType.Name;
         }
 
         public Node Create(Program parentProgram) {
-            FlowNode node = Activator.CreateInstance (FlowNodeType, parentProgram, new VectorPosition (0, 0)) as FlowNode;
+            FlowNode node = (Activator.CreateInstance (FlowNodeType) as FlowNode).SetSource (Identifier, 0).SetPosition (new VectorPosition (0, 0)).SetProgram (parentProgram) as FlowNode;
+            parentProgram.AddNode(node);
             return node;
         }
     }

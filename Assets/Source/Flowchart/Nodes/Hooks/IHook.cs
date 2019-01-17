@@ -19,6 +19,8 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Hooks {
 
         IConnection CreateConnection();
 
+        void Init();
+
     }
 
 }

@@ -7,8 +7,6 @@ using System.Text;
 namespace Lomztein.ProjectAI.Flowchart.Nodes {
     class VariableNode : Node, INextNode {
 
-        public VariableNode(Program _parentProgram, INodePosition position) : base (_parentProgram, position) { }
-
         public ChainHook PreviousHook { get; set; }
 
         public object Value { get; set; }
@@ -16,5 +14,14 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes {
         public void Execute(ExecutionMetadata metadata) {
         }
 
+        public override void InitChildren()
+        {
+            PreviousHook = new ChainHook()
+                .SetNode(this)
+                .SetDirection(Direction.In)
+                .SetProgram(ParentProgram) as ChainHook;
+
+            PreviousHook.Init();
+        }
     }
 }

@@ -12,13 +12,17 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Hooks {
         public Type ValueType { get; set; }
 
         public override IConnection CreateConnection() {
-            return new VariableConnection (ParentProgram);
+            return new VariableConnection ().SetProgram (ParentProgram) as VariableConnection;
         }
 
-        public OutputHook (Program _parentProgram, Node _parent, string _name, string _description, Type _type) : base (_parentProgram, _parent, Direction.Out, 0) {
-            Name = _name;
-            Description = _description;
-            ValueType = _type;
+        public OutputHook SetType (Type type)
+        {
+            ValueType = type;
+            return this;
+        }
+
+        public override void Init()
+        {
             Direction = Direction.Out;
         }
     }

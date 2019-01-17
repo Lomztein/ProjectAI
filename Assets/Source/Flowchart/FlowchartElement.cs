@@ -12,8 +12,25 @@ namespace Lomztein.ProjectAI.Flowchart {
 
         public Program ParentProgram { get; set; }
 
-        public FlowchartElement (Program _parent) {
-            ParentProgram = _parent;
+        public virtual string Name { get; set; }
+        public virtual string Description { get; set; }
+
+        public FlowchartElement SetProgram (Program parent)
+        {
+            ParentProgram = parent;
+            return this;
+        }
+
+        public FlowchartElement SetName (string name)
+        {
+            Name = name;
+            return this;
+        }
+
+        public FlowchartElement SetDesc (string desc)
+        {
+            Description = desc;
+            return this;
         }
 
     }

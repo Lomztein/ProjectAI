@@ -14,7 +14,7 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Flow {
             }
 
             set {
-                throw new NotImplementedException ();
+                throw new InvalidOperationException ();
             }
         }
 
@@ -24,21 +24,24 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Flow {
             }
 
             set {
-                throw new NotImplementedException ();
+                throw new InvalidOperationException();
             }
         }
 
-        private List<Instance> Instances { get; set; }
+        private List<Instance> Instances { get; set; } = new List<Instance>();
 
-        public DurationFlowNode (Program _parentProgram, INodePosition position) : base (_parentProgram, position) {
+        public override void InitChildren () {
+            base.InitChildren();
 
-            this.SetInputs (new InputHook (ParentProgram, this, "Duration", "The duration in ticks that this will run.", typeof (int)));
-            this.SetOutputs (new OutputHook (ParentProgram, this, "Counter", "The counter of the last execution instance.", typeof (int)));
+            this.SetInputs (new InputHook ().SetType (typeof (int)).SetName ("Duration").SetDesc ("The duration in ticks that this will run.") as InputHook);
+            this.SetOutputs(new OutputHook().SetType(typeof(int)).SetName ("Counter").SetDesc ("The counter of execution steps.") as OutputHook);
+
             SetRoutes (
-                new ChainHook (ParentProgram, this, Direction.Out, "Execute During", "The output that will be executed while this node is running."),
-                new ChainHook (ParentProgram, this, Direction.Out, "Done", "Executed when a duration has completed.")
+                new ChainHook ().SetNode (this).SetDirection (Direction.Out).SetName ("During").SetDesc ("Execute while running.").SetProgram (ParentProgram) as ChainHook,
+                new ChainHook ().SetNode (this).SetDirection (Direction.Out).SetName ("Done").SetDesc ("Execute when done.").SetProgram (ParentProgram) as ChainHook
                 );
-            Instances = new List<Instance> ();
+
+            PossibleRoutes.InitAll();
         }
 
         public override void Execute(ExecutionMetadata metadata) {

@@ -27,12 +27,17 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Flow {
             }
         }
 
-        public IfFlowNode(Program _parent, INodePosition position) : base (_parent, position) {
+        public override void InitChildren()
+        {
+            base.InitChildren();
 
-            this.SetInputs (new InputHook (ParentProgram, this, "Condition", "The condition that decides which path execution will continue on.", typeof (bool)));
-            SetRoutes (
-                new ChainHook (ParentProgram, this, Direction.Out, "True", "Continues here if the condition is true."),
-                new ChainHook (ParentProgram, this, Direction.Out, "False", "Continues here if the condition is false."));
+            this.SetInputs(new InputHook().SetType(typeof(bool)).SetNode(this).SetName("Condition").SetDesc("Execute \"True\" or \"False\" dependant on this.").SetProgram(ParentProgram) as InputHook);
+            SetRoutes(
+                new ChainHook().SetNode(this).SetDirection(Direction.Out).SetName("True").SetDesc("This way if true").SetProgram(ParentProgram) as ChainHook,
+                new ChainHook().SetNode(this).SetDirection(Direction.Out).SetName("False").SetDesc("This way if false").SetProgram(ParentProgram) as ChainHook
+                );
+
+            PossibleRoutes.InitAll();
         }
 
         public override void Execute(ExecutionMetadata metadata) {

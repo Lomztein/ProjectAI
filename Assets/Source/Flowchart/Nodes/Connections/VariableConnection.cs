@@ -8,8 +8,6 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Connections {
 
     public class VariableConnection : Connection {
 
-        public VariableConnection(Program _parent) : base (_parent) { }
-
         public override Type HookType { get { return typeof (IVariableHook); } }
 
         public override bool CanConnect(IHook one, IHook two) {

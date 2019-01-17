@@ -7,6 +7,8 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Prefabs {
 
     public interface INodePrefab : INamed {
 
+        string Identifier { get; set; }
+
         Node Create(Program parentProgram);
 
     }

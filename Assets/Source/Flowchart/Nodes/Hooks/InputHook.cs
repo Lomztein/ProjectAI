@@ -42,14 +42,19 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Hooks {
         }
 
         public override IConnection CreateConnection() {
-            return new VariableConnection (ParentProgram);
+            return new VariableConnection ().SetProgram (ParentProgram) as VariableConnection;
         }
 
-        public InputHook(Program _parentProgram, Node _parent, string _name, string _description, Type _type) : base (_parentProgram, _parent, Direction.In, 1) {
-            Name = _name;
-            Description = _description;
-            MaxConnections = 1;
-            ValueType = _type;
+        public override void Init()
+        {
+            SetDirection(Direction.In);
+            SetMaxConnections(1);
+        }
+
+        public InputHook SetType (Type type)
+        {
+            ValueType = type;
+            return this;
         }
     }
 }

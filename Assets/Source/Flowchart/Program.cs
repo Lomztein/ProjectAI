@@ -5,27 +5,36 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using Lomztein.ProjectAI.UI.Editor.ProgramEditor;
+using Lomztein.ProjectAI.Serialization;
+using Newtonsoft.Json.Linq;
+using Lomztein.ProjectAI.Flowchart.Nodes.Connections;
 
 namespace Lomztein.ProjectAI.Flowchart {
 
-    public class Program : MonoBehaviour {
+    public class Program : MonoBehaviour, INamed, IJsonSerializable {
 
-        public List<Node> AllNodes { get; private set; }
+        public string Name { get; set; } = "Test";
+        public string Description { get; set; } = "Merely a program here for early testing.";
 
-        public List<EventNode> EventNodes { get; private set; }
+        public List<Node> AllNodes { get; private set; } = new List<Node>();
+        public List<IConnection> AllConnections { get; private set; } = new List<IConnection>();
 
-        public void Awake() {
-            AllNodes = new List<Node> ();
-            EventNodes = new List<EventNode> ();
-        }
+        public List<EventNode> EventNodes { get; private set; } = new List<EventNode>();
 
         public EventNode AddEvent (string eventName, string eventDescription, params OutputHook[] outputs) {
 
-            EventNode eventNode = new EventNode (this, new VectorPosition (0, 0), outputs) { Name = eventName, Description = eventDescription };
+            EventNode eventNode = new EventNode()
+                .SetOutputs(outputs)
+                .SetPosition(new VectorPosition(0, 0))
+                .SetProgram(this)
+                .SetName(eventName)
+                .SetDesc(eventDescription) as EventNode;
+
+            eventNode.InitChildren();
 
             foreach (OutputHook hook in outputs) {
-                hook.ParentProgram = this;
-                hook.ParentNode = eventNode; 
+                hook.SetProgram (this);
+                hook.SetNode (eventNode); 
             }
 
             return AddEvent (eventNode);
@@ -38,14 +47,12 @@ namespace Lomztein.ProjectAI.Flowchart {
         }
 
         public void ExecuteEvent(string eventName, params object[] arguments) {
-
             EventNode eventNode = EventNodes.Find (x => x.Name == eventName);
 
             for (int i = 0; i < eventNode.OutputHooks.Length; i++)
                 eventNode.OutputHooks[i].Value = arguments[i];
 
             Executor.CurrentExecutor.RootExecute (eventNode);
-
         }
 
         public void AddNode (Node node) {
@@ -56,6 +63,26 @@ namespace Lomztein.ProjectAI.Flowchart {
             AllNodes.Remove (node);
         }
 
+        public void Save ()
+        {
+            this.Save(Application.dataPath + "/StreamingAssets/Programs/" + Name + ".json");
+        }
+
+        public JObject Serialize()
+        {
+            return new JObject
+            {
+                { "Name", Name },
+                { "Desc", Description },
+                { "Nodes",  new JArray(AllNodes.Select(x => x.Serialize())) },
+                { "Connections",  new JArray(AllConnections.Select(x => x.Serialize())) }
+            };
+        }
+
+        public void Deserialize(JObject source)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 
 }
