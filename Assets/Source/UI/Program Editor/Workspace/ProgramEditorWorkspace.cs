@@ -91,7 +91,11 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor {
 
             Console.WriteLine (value);
 
-            ValueNode valueNode = new ValueNode (ProgramEditor.CurrentEditor.CurrentProgram, value, inputHook.ValueType, new VectorPosition (0, 0));
+            ValueNode valueNode = new ValueNode ().SetPosition (new VectorPosition (0, 0)).SetProgram (ProgramEditor.CurrentEditor.CurrentProgram) as ValueNode;
+            valueNode.InitChildren();
+
+            valueNode.SetValue(value).SetType(inputHook.ValueType);
+
             GameObject newWidget = Instantiate (widgetPrefab, workspace.transform);
             newWidget.transform.position = Input.mousePosition;
             IValueWidget widget = newWidget.GetComponent<IValueWidget> ();

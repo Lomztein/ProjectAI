@@ -1,4 +1,5 @@
 ﻿using Lomztein.ProjectAI.Flowchart.Nodes;
+using Newtonsoft.Json.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -30,6 +31,21 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor {
             set {
                 position.y = (float)value;
             }
+        }
+
+        public void Deserialize(JObject source)
+        {
+            X = source.GetValue ("X").ToObject<double>();
+            Y = source.GetValue ("Y").ToObject<double>();
+        }
+
+        public JObject Serialize()
+        {
+            return new JObject()
+            {
+                { "X", X },
+                { "Y", Y }
+            };
         }
     }
 

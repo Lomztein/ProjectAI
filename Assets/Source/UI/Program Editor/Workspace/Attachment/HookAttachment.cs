@@ -30,6 +30,7 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.Attachments {
 
             if (text)
                 text.text = hook.Name;
+
             image.color = color;
             button.onClick.AddListener (() => OnClicked ());
         }
