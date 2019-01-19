@@ -22,6 +22,7 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes {
                 .SetProgram(ParentProgram) as ChainHook;
 
             PreviousHook.Init();
+            AddHooks(PreviousHook);
         }
     }
 }

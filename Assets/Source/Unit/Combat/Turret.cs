@@ -2,17 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Lomztein.ProjectAI.Sim;
+using Lomztein.ProjectAI.Unit;
+using Lomztein.ProjectAI.Flowchart;
+using Lomztein.ProjectAI.Flowchart.Nodes.Prefabs;
+using Lomztein.ProjectAI.Flowchart.Nodes;
+using static Lomztein.ProjectAI.Unit.Unit;
 
 public class Turret : SimComponent
 {
     public Vector3 TargetPosition { get; private set; }
+    public Program Program { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
     public Transform baseTransform;
     public Transform yawTransform;
     public Transform pitchTransform;
 
-    public Vector2 yawMinMax = new Vector2(-180, 180);
-    public Vector2 pitchMinMax = new Vector2(-180, 180);
+    [Range (-180, 180)]
+    public float yawOffset;
+    [Range (-180, 180)]
+    public float pitchOffset;
+
+    public Vector2 yawMinMax = new Vector2(180, -180);
+    public Vector2 pitchMinMax = new Vector2(180, -180);
 
     public float rotationSpeed;
 
@@ -70,7 +81,17 @@ public class Turret : SimComponent
 
     public override void Tick(float deltaTime)
     {
-        Target(WorldCursor.Position);
         RotateTowardsTarget(deltaTime);
+    }
+
+    public void GatherNodePrefabs(PrefabGathering gathering)
+    {
+        gathering.AddActions(
+        new INodePrefab[] { new ActionNodePrefab ("Target Position", "Order turret to target a position", "Turret.TargetPos",
+            new ProgramAction ((input, output) => Target (new Vector3 (input.Get<float> ("X"), input.Get<float> ("Y"), input.Get<float> ("Z"))))
+            .AddInput (typeof (float), "X", "The X component of the vector.")
+            .AddInput (typeof (float), "Y", "The Y component of the vector.")
+            .AddInput (typeof (float), "Z", "The Z component of the vector.")) }
+        );
     }
 }

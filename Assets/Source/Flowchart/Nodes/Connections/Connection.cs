@@ -22,27 +22,30 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Connections {
         }
 
         public virtual void Delete() {
-
             From.Disconnect (this, false);
             To.Disconnect (this, false);
+            OnDeleted?.Invoke();
+        }
 
-            if (OnDeleted != null)
-                OnDeleted ();
+        public virtual void Init ()
+        {
+            ParentProgram.AddConnection(this);
+            OnDeleted += () => ParentProgram.RemoveConnection(this);
         }
 
         public void Deserialize(JObject source)
         {
-            throw new NotImplementedException();
+            throw new InvalidOperationException("Connections shouldn't be deserialized directly, but instead reconnected on program deserialization.");
         }
 
         public JObject Serialize()
         {
             return new JObject()
             {
-                { "FromNode", 0 },
-                { "FromHook", 0 },
-                { "ToNode", 0 },
-                { "ToHook", 0 }
+                { "FromNode", From.ParentNode.GetNodeIndex () },
+                { "FromHook", From.ParentNode.GetHookIndex (From) },
+                { "ToNode", To.ParentNode.GetNodeIndex () },
+                { "ToHook", To.ParentNode.GetHookIndex (To) }
             };
         }
     }

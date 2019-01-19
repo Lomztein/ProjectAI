@@ -68,7 +68,6 @@ namespace Lomztein.ProjectAI.Unit {
         }
 
         public INodePrefab[] GetAvailableNodePrefabs () {
-
             PrefabGathering gathering = new PrefabGathering ();
             transform.root.BroadcastMessage ("GatherNodePrefabs", gathering);
 
@@ -79,6 +78,7 @@ namespace Lomztein.ProjectAI.Unit {
             Program.ExecuteEvent ("Test");
         }
 
+        // TODO: Replace this with a system that uses a unique IProgrammableComponent interface instead of broadcasting messages.
         public void GatherNodePrefabs(PrefabGathering prefabGathering) {
             prefabGathering.AddActions(new List<INodePrefab>() {
             new ActionNodePrefab ("Sudoku", "Commit sudoku out of shame.", "Unit.Suicide", new ProgramAction ((input, output) => Kill ())),

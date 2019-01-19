@@ -24,7 +24,7 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes {
             return FindHookByName (node.OutputHooks, name) as OutputHook;
         }
 
-        private static IHook FindHookByName (IHook[] hooks, string name) {
+        private static IHook FindHookByName (IEnumerable<Hook> hooks, string name) {
             foreach (var hook in hooks) {
                 if (hook.Name == name)
                     return hook;
@@ -34,12 +34,23 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes {
         }
 
         public static IHasInput SetInputs(this IHasInput inputNode, params InputHook[] inputs) {
+
+            if (inputNode.InputHooks != null)
+                throw new InvalidOperationException("Input has already been set!");
+
             inputNode.InputHooks = inputs;
+            (inputNode as Node).AddHooks(inputs);
+
             return inputNode;
         }
 
         public static IHasOutput SetOutputs(this IHasOutput outputNode, params OutputHook[] outputs) {
+
+            if (outputNode.OutputHooks != null)
+                throw new InvalidOperationException("Output has already been set!");
+
             outputNode.OutputHooks = outputs;
+            (outputNode as Node).AddHooks(outputs);
             return outputNode;
         }
 

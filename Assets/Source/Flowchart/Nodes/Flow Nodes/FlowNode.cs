@@ -29,10 +29,14 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Flow {
 
             PreviousHook.Init();
             NextHook.Init();
+
+            AddHooks(PreviousHook);
+            AddHooks(NextHook);
         }
 
         protected FlowNode SetRoutes (params ChainHook[] routes) {
             PossibleRoutes = routes;
+            AddHooks(routes);
             return this;
         }
 

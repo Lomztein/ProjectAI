@@ -34,13 +34,14 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes {
         public override void InitChildren()
         {
             //this, "Value", "Contains a singular, constant value.", _valueType
-            OutputHooks = new OutputHook[1];
-            Output = new OutputHook()
-                .SetNode (this)
-                .SetName ("Value")
-                .SetDesc ("Contains a singular, constant value.") as OutputHook;
+            this.SetOutputs(
+                new OutputHook()
+                    .SetNode(this)
+                    .SetName("Value")
+                    .SetDesc("Contains a singular, constant value.") as OutputHook
+            );
 
-            Output.Init();
+            OutputHooks.InitAll();
         }
     }
 }

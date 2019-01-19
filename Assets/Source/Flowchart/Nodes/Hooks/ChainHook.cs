@@ -9,7 +9,9 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Hooks {
     public class ChainHook : Hook {
 
         public override IConnection CreateConnection() {
-            return new ChainConnection ().SetProgram (ParentProgram) as ChainConnection;
+            ChainConnection newConn = new ChainConnection ().SetProgram (ParentProgram) as ChainConnection;
+            newConn.Init();
+            return newConn;
         }
 
         public override void Init () {

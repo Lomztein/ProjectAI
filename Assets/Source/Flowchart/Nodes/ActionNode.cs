@@ -56,6 +56,9 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes {
 
             InputHooks.InitAll();
             OutputHooks.InitAll();
+
+            AddHooks(NextHook);
+            AddHooks(PreviousHook);
         }
     }
 }

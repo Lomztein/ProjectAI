@@ -24,12 +24,13 @@ namespace Lomztein.ProjectAI.Flowchart {
         public EventNode AddEvent (string eventName, string eventDescription, params OutputHook[] outputs) {
 
             EventNode eventNode = new EventNode()
-                .SetOutputs(outputs)
                 .SetPosition(new VectorPosition(0, 0))
                 .SetProgram(this)
                 .SetName(eventName)
                 .SetDesc(eventDescription) as EventNode;
+            eventNode.SetOutputs(outputs);
 
+            eventNode.Init();
             eventNode.InitChildren();
 
             foreach (OutputHook hook in outputs) {
@@ -42,7 +43,6 @@ namespace Lomztein.ProjectAI.Flowchart {
 
         public EventNode AddEvent (EventNode eventNode) {
             EventNodes.Add (eventNode);
-            AddNode (eventNode);
             return eventNode;
         }
 
@@ -59,9 +59,13 @@ namespace Lomztein.ProjectAI.Flowchart {
             AllNodes.Add (node);
         }
 
-        public void RemoveNode (Node node) {
-            AllNodes.Remove (node);
+        public bool RemoveNode (Node node) {
+            return AllNodes.Remove (node);
         }
+
+        public void AddConnection(IConnection connection) => AllConnections.Add(connection);
+
+        public bool RemoveConnection(IConnection connection) => AllConnections.Remove(connection);
 
         public void Save ()
         {

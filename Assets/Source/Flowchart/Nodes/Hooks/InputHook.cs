@@ -42,7 +42,9 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Hooks {
         }
 
         public override IConnection CreateConnection() {
-            return new VariableConnection ().SetProgram (ParentProgram) as VariableConnection;
+            VariableConnection conn = new VariableConnection ().SetProgram (ParentProgram) as VariableConnection;
+            conn.Init();
+            return conn;
         }
 
         public override void Init()

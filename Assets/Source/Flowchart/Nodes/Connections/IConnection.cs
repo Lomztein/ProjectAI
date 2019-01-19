@@ -16,5 +16,7 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Connections {
 
         bool CanConnect(IHook one, IHook two);
 
+        void Init();
+
     }
 }

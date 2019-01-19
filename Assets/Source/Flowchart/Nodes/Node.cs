@@ -1,4 +1,5 @@
-﻿using Lomztein.ProjectAI.Serialization;
+﻿using Lomztein.ProjectAI.Flowchart.Nodes.Hooks;
+using Lomztein.ProjectAI.Serialization;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
@@ -12,7 +13,10 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes {
         public string PrefabIdentifier { get; private set; }
         public int PrefabSourceIndex { get; private set; }
 
+        private List<IHook> allHooks = new List<IHook>();
+
         public INodePosition Position { get; private set; }
+
         public uint LastActiveTick { get; set; }
 
         public event OnDeletedEvent OnDeleted;
@@ -21,6 +25,12 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes {
         {
             Position = position;
             return this;
+        }
+
+        public void Init ()
+        {
+            ParentProgram.AddNode(this);
+            OnDeleted += () => ParentProgram.RemoveNode(this);
         }
 
         /// <summary>
@@ -38,7 +48,6 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes {
 
         public virtual void Delete() {
             OnDeleted?.Invoke();
-            ParentProgram.RemoveNode (this);
         }
 
         public JObject Serialize()
@@ -55,6 +64,14 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes {
         {
             // Everyhing but position is automatically populated when the node is created from prefab.
             Position.Deserialize(source.GetValue("Position") as JObject);
+        }
+
+        public int GetHookIndex(IHook hook) => allHooks.IndexOf(hook);
+        public int GetNodeIndex() => ParentProgram.AllNodes.IndexOf(this);
+
+        public void AddHooks (params IHook[] hooks)
+        {
+            allHooks.AddRange(hooks);
         }
 
     }

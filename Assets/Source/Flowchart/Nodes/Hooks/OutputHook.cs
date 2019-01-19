@@ -1,4 +1,4 @@
-﻿using Lomztein.ProjectAI.Flowchart.Nodes.Connections;
+﻿ using Lomztein.ProjectAI.Flowchart.Nodes.Connections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,9 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Hooks {
         public Type ValueType { get; set; }
 
         public override IConnection CreateConnection() {
-            return new VariableConnection ().SetProgram (ParentProgram) as VariableConnection;
+            VariableConnection conn = new VariableConnection ().SetProgram (ParentProgram) as VariableConnection;
+            conn.Init();
+            return conn;
         }
 
         public OutputHook SetType (Type type)

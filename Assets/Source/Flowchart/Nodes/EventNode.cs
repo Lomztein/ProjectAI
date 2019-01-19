@@ -14,12 +14,6 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes {
 
         public OutputHook[] OutputHooks { get; set; }
 
-        public EventNode SetOutputs (params OutputHook[] outputs)
-        {
-            NodeExtensions.SetOutputs(this, outputs);
-            return this;
-        }
-
         public void Execute(ExecutionMetadata metadata) {
             NextHook.EnqueueAndExecuteNextNextNodes ();
         }
@@ -42,6 +36,7 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes {
                 .SetProgram(ParentProgram) as ChainHook;
 
             NextHook.Init();
+            AddHooks(NextHook);
             OutputHooks.InitAll();
         }
     }

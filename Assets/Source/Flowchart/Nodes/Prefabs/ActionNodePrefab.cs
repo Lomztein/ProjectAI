@@ -47,7 +47,6 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Prefabs {
             node.SetOutputs (outputs);
 
             node.InitChildren();
-            parentProgram.AddNode(node);
 
             return node;
         }
