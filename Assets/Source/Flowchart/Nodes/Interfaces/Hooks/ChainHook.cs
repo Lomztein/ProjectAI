@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Lomztein.ProjectAI.Flowchart.Nodes.Connections;
 
-namespace Lomztein.ProjectAI.Flowchart.Nodes.Hooks {
+namespace Lomztein.ProjectAI.Flowchart.Nodes.Interfaces.Hooks {
 
     public class ChainHook : Hook {
 

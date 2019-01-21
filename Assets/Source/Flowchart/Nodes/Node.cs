@@ -14,6 +14,8 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes {
         public int PrefabSourceIndex { get; private set; }
 
         private List<IHook> allHooks = new List<IHook>();
+        private List<INodeComponent> nodeComponents = new List<INodeComponent>();
+        private List<INodeInterface> nodeInterfaces = new List<INodeInterface>();
 
         public INodePosition Position { get; private set; }
 

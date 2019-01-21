@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Lomztein.ProjectAI.Flowchart.Nodes.Hooks {
+namespace Lomztein.ProjectAI.Flowchart.Nodes.Interfaces.Hooks {
 
     public class OutputHook : Hook, IVariableHook {
 

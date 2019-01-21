@@ -4,9 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Lomztein.ProjectAI.Flowchart.Nodes.Hooks {
-
-    public enum Direction { In = -1, Uni = 0, Out = 1 };
+namespace Lomztein.ProjectAI.Flowchart.Nodes.Interfaces.Hooks {
 
     public interface IHook : IFlowchartElement, INamed {
 

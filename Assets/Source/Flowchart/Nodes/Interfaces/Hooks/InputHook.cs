@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Lomztein.ProjectAI.Flowchart.Nodes.Hooks {
+namespace Lomztein.ProjectAI.Flowchart.Nodes.Interfaces.Hooks {
 
     public class InputHook : Hook, IVariableHook {
 
