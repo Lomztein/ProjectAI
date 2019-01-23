@@ -1,4 +1,4 @@
-﻿using Lomztein.ProjectAI.Flowchart.Nodes.Hooks;
+﻿using Lomztein.ProjectAI.Flowchart.Nodes.Interfaces.Hooks;
 using System;
 using System.Collections.Generic;
 using System.Linq;

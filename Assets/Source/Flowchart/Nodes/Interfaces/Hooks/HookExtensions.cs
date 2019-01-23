@@ -52,14 +52,14 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Interfaces.Hooks {
         }
 
         public static void EnqueueAndExecuteNextNextNodes(this ChainHook chainHook) {
-            Executor.EnqueueAllOnCurrent (chainHook.GetConnectedNodes<INextNode> ());
+            Executor.EnqueueAllOnCurrent (chainHook.GetConnectedHooks<ChainHook> ());
             Executor.CurrentExecutor.ExecuteAll ();
         }
 
-        public static T[] GetConnectedNodes<T>(this IHook hook) where T : class {
+        public static T[] GetConnectedHooks<T>(this IHook hook) where T : class {
             List<T> nodes = new List<T> ();
             foreach (var connection in hook.Connections) {
-                nodes.Add (connection.To.ParentNode as T);
+                nodes.Add (connection.To as T);
             }
             return nodes.ToArray ();
         }

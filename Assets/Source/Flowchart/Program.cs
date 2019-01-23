@@ -1,5 +1,4 @@
 ﻿using Lomztein.ProjectAI.Flowchart.Nodes;
-using Lomztein.ProjectAI.Flowchart.Nodes.Hooks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +7,7 @@ using Lomztein.ProjectAI.UI.Editor.ProgramEditor;
 using Lomztein.ProjectAI.Serialization;
 using Newtonsoft.Json.Linq;
 using Lomztein.ProjectAI.Flowchart.Nodes.Connections;
+using Lomztein.ProjectAI.Flowchart.Nodes.Interfaces.Hooks;
 
 namespace Lomztein.ProjectAI.Flowchart {
 
@@ -19,15 +19,17 @@ namespace Lomztein.ProjectAI.Flowchart {
         public List<Node> AllNodes { get; private set; } = new List<Node>();
         public List<IConnection> AllConnections { get; private set; } = new List<IConnection>();
 
-        public List<EventNode> EventNodes { get; private set; } = new List<EventNode>();
+        public List<Node> EventNodes { get; private set; } = new List<Node>();
 
-        public EventNode AddEvent (string eventName, string eventDescription, params OutputHook[] outputs) {
+        public Node AddEvent (string eventName, string eventDescription, params OutputHook[] outputs) {
 
-            EventNode eventNode = new EventNode()
+            Node eventNode = new Node()
                 .SetPosition(new VectorPosition(0, 0))
                 .SetProgram(this)
                 .SetName(eventName)
-                .SetDesc(eventDescription) as EventNode;
+                .SetDesc(eventDescription) as Node;
+
+
             eventNode.SetOutputs(outputs);
 
             eventNode.Init();

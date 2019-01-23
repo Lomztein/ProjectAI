@@ -1,4 +1,5 @@
-﻿using Lomztein.ProjectAI.Flowchart.Nodes.Hooks;
+﻿using Lomztein.ProjectAI.Flowchart.Nodes.Components;
+using Lomztein.ProjectAI.Flowchart.Nodes.Interfaces.Hooks;
 using Lomztein.ProjectAI.UI.Editor.ProgramEditor;
 using System;
 using System.Collections.Generic;
@@ -24,31 +25,27 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Prefabs {
 
         public Node Create(Program parentProgram) {
 
-            ActionNode node = new ActionNode()
-                .SetAction(Action)
-                .SetSource(Identifier, 0)
-                .SetPosition (new VectorPosition (0, 0))
-                .SetProgram (parentProgram) as ActionNode;
-
-            this.CopyTo (node);
+            ActionComponent action = new ActionComponent()
+                .SetAction(Action);
 
             InputHook[] inputs = new InputHook[Action.Inputs.Count];
             OutputHook[] outputs = new OutputHook[Action.Outputs.Count];
 
+            Node actionNode = new Node();
+
             for (int i = 0; i < Action.Inputs.Count; i++) {
-                inputs[i] = new InputHook ().SetType (Action.Inputs[i].Type).SetNode (node).SetName (Action.Inputs[i].Name).SetProgram (parentProgram) as InputHook;
+                inputs[i] = new InputHook ().SetType (Action.Inputs[i].Type).SetNode (actionNode).SetName (Action.Inputs[i].Name).SetProgram (parentProgram) as InputHook;
             }
 
             for (int i = 0; i < Action.Outputs.Count; i++) {
-                outputs[i] = new OutputHook ().SetType (Action.Outputs[i].Type).SetNode (node).SetName (Action.Outputs[i].Name).SetProgram (parentProgram) as OutputHook;
+                outputs[i] = new OutputHook ().SetType (Action.Outputs[i].Type).SetNode (actionNode).SetName (Action.Outputs[i].Name).SetProgram (parentProgram) as OutputHook;
             }
 
-            node.SetInputs (inputs);
-            node.SetOutputs (outputs);
 
-            node.InitChildren();
-
-            return node;
+            /*action. (inputs);
+            action.SetOutputs (outputs);
+            */
+            return actionNode;
         }
     }
 }

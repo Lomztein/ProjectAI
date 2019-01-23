@@ -6,7 +6,14 @@ using Lomztein.ProjectAI.Flowchart.Nodes.Connections;
 
 namespace Lomztein.ProjectAI.Flowchart.Nodes.Interfaces.Hooks {
 
-    public class ChainHook : Hook {
+    public class ChainHook : Hook, IExecutable {
+
+        public void Execute (ExecutionMetadata metadata)
+        {
+            OnExecute?.Invoke(metadata);
+        }
+
+        public event Action<ExecutionMetadata> OnExecute;
 
         public override IConnection CreateConnection() {
             ChainConnection newConn = new ChainConnection ().SetProgram (ParentProgram) as ChainConnection;
@@ -25,11 +32,13 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Interfaces.Hooks {
                 case Direction.Out:
                     Name = "Chain Output";
                     Description = "Hook this up to a chain input in order to further the chain.";
+                    OnExecute += (data) => this.EnqueueAndExecuteNextNextNodes();
                     break;
 
                 case Direction.Uni:
                     Name = "Universal Chain";
                     Description = "Hook either an input or output to this.";
+                    OnExecute += (data) => this.EnqueueAndExecuteNextNextNodes();
                     break;
 
                 default:

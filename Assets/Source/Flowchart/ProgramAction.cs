@@ -1,4 +1,6 @@
-﻿using Lomztein.ProjectAI.Flowchart.Nodes;
+﻿using Flowchart.Nodes.Interfaces;
+using Lomztein.ProjectAI.Flowchart.Nodes;
+using Lomztein.ProjectAI.Flowchart.Nodes.Interfaces;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,12 +12,12 @@ namespace Lomztein.ProjectAI.Flowchart {
 
     public class ProgramAction {
 
-        public Action<IHasInput, IHasOutput> InternalAction { get; set; }
+        public Action<InputInterface, OutputInterface> InternalAction { get; set; }
 
         public List<ActionIO> Inputs { get; set; }
         public List<ActionIO> Outputs { get; set; }
 
-        public void Execute (IHasInput input, IHasOutput output) {
+        public void Execute (InputInterface input, OutputInterface output) {
             InternalAction (input, output);
         }
 
@@ -37,7 +39,7 @@ namespace Lomztein.ProjectAI.Flowchart {
             return this;
         }
 
-        public ProgramAction(Action<IHasInput, IHasOutput> _action) {
+        public ProgramAction(Action<InputInterface, OutputInterface> _action) {
             InternalAction = _action;
             Inputs = new List<ActionIO> ();
             Outputs = new List<ActionIO> ();
