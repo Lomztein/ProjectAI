@@ -3,7 +3,7 @@ using Lomztein.ProjectAI.Flowchart.Nodes.Interfaces.Hooks;
  
 namespace Lomztein.ProjectAI.Flowchart.Nodes.Interfaces
 {
-    class ChainInterface : NodeInterface
+    public class ChainInterface : NodeInterface
     {
         public ChainHook Hook;
 
@@ -11,20 +11,18 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Interfaces
 
         public override Direction Direction { get; set; }
 
+        public ChainInterface (Direction dir) { Direction = dir; }
+
         public override void Delete()
         {
             Hook.DisconnectAll();
         }
 
-        public override void Init(Node parent, Direction direction)
+        public override void Init(Node parent)
         {
-            Direction = direction;
             Hook = new ChainHook()
-                .SetDirection (direction)
-                .SetMaxConnections (direction == Direction.In ? 1 : 0)
+                .SetDirection (Direction)
                 .SetNode (parent)
-                .SetName (direction == Direction.In ? "In" : "Out")
-                .SetDesc (direction == Direction.In ? "Chain execution input." : "Chain execution output")
                 .SetProgram (parent.ParentProgram) as ChainHook;
             Hook.Init();
 

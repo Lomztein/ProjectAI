@@ -20,7 +20,7 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Interfaces
             InterfaceHooks.ForEach(x => x.DisconnectAll());
         }
 
-        public override void Init(Node parent, Direction direction)
+        public override void Init(Node parent)
         {
             foreach (IHook hook in InterfaceHooks)
                 hook.Init();

@@ -1,6 +1,5 @@
 ﻿using Lomztein.ProjectAI.Flowchart;
-using Lomztein.ProjectAI.Flowchart.Nodes.Connections;
-using Lomztein.ProjectAI.Flowchart.Nodes.Hooks;
+using Lomztein.ProjectAI.Flowchart.Nodes.Interfaces.Hooks;
 using Lomztein.ProjectAI.Unity;
 using System.Collections;
 using System.Collections.Generic;

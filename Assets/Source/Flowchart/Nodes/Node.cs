@@ -15,9 +15,8 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes {
         public string PrefabIdentifier { get; private set; }
         public int PrefabSourceIndex { get; private set; }
 
-        private List<IHook> AllHooks { get => nodeInterfaces.SelectMany(x => x.InterfaceHooks).ToList (); }
-        private List<INodeComponent> nodeComponents = new List<INodeComponent>();
-        private List<INodeInterface> nodeInterfaces = new List<INodeInterface>();
+        private List<IHook> AllHooks { get => NodeComponents.OfType<INodeInterface>().SelectMany(x => x.InterfaceHooks).ToList (); }
+        public List<INodeComponent> NodeComponents { get; private set; } = new List<INodeComponent>();
 
         public INodePosition Position { get; private set; }
 
@@ -35,6 +34,7 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes {
         {
             ParentProgram.AddNode(this);
             OnDeleted += () => ParentProgram.RemoveNode(this);
+            NodeComponents.ForEach(x => x.Init(this));
         }
 
         public Node SetSource (string identifier, int index)
@@ -55,31 +55,29 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes {
                 { "PrefabIdentifier", PrefabIdentifier },
                 { "PrefabSourceIndex", PrefabSourceIndex },
                 { "Position", Position.Serialize () },
-                { "Components", new JArray (nodeComponents.Select (x => x.Serialize ())) },
-                { "Interfaces", new JArray (nodeInterfaces.Select (x => x.Serialize ())) }
+                { "Components", new JArray (NodeComponents.Select (x => x.Serialize ())) },
             };
         }
 
         public void Deserialize(JObject source)
         {
-            // Everyhing but position is automatically populated when the node is created from prefab.
             Position.Deserialize(source.GetValue("Position") as JObject);
-        }
-
-        public T GetOrAddInterface<T> (Direction direction) where T : INodeInterface, new ()
-        {
-            T nodeInterface = (T)nodeInterfaces.Find(x => x.GetType().IsEquivalentTo(typeof(T)) && x.Direction == direction);
-            if (nodeInterface == null)
+            JArray components = source.GetValue("Components") as JArray;
+            for (int i = 0; i < components.Count; i++)
             {
-                nodeInterface = new T();
-                nodeInterfaces.Add(nodeInterface);
-                nodeInterface.Init(this, direction);
+                NodeComponents[i].Deserialize(components[i] as JObject);
             }
-
-            return nodeInterface;
         }
 
-        public void AddComponent ()
+        public void AddComponent (INodeComponent component)
+        {
+            NodeComponents.Add(component);
+        }
+
+        public T GetComponent<T>() where T : INodeComponent
+        {
+            return (T)NodeComponents.Find(x => x.GetType().IsEquivalentTo(typeof(T)));
+        }
 
         public int GetHookIndex(IHook hook) => AllHooks.IndexOf(hook);
         public int GetNodeIndex() => ParentProgram.AllNodes.IndexOf(this);

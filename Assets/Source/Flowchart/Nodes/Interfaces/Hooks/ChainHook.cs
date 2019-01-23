@@ -35,12 +35,6 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Interfaces.Hooks {
                     OnExecute += (data) => this.EnqueueAndExecuteNextNextNodes();
                     break;
 
-                case Direction.Uni:
-                    Name = "Universal Chain";
-                    Description = "Hook either an input or output to this.";
-                    OnExecute += (data) => this.EnqueueAndExecuteNextNextNodes();
-                    break;
-
                 default:
                     Name = "Unsupported";
                     Description = "This hook direction is unsupported and shouldn't exist, go tell the dev that he fucked up.";

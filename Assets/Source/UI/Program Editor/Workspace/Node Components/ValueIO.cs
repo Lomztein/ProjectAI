@@ -1,39 +1,35 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using Lomztein.ProjectAI.Flowchart;
 using Lomztein.ProjectAI.Flowchart.Nodes;
-using Lomztein.ProjectAI.Flowchart.Nodes.Flow;
-using Lomztein.ProjectAI.Flowchart.Nodes.Hooks;
+using Lomztein.ProjectAI.Flowchart.Nodes.Interfaces;
+using Lomztein.ProjectAI.Flowchart.Nodes.Interfaces.Hooks;
 using Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.Attachments;
 using Lomztein.ProjectAI.Unity;
 using UnityEngine;
 
 namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.NodeComponents
 {
-    public class ValueIO : NodeComponent
+    public class ValueIO : NodeWidgetComponent
     {
-        private static readonly Resource<GameObject> FlowOutputHook = new Resource<GameObject>("UI/Flowchart/FlowOutputHook");
-
-        public RectTransform inputSide;
-        public RectTransform outputSide;
-        public RectTransform flowSide;
-
-        public override Type[] ApplicableTypes => new Type[]
-        {
-            typeof (IHasInput),
-            typeof (IHasOutput),
-            typeof (IFlowNode)
-        };
-
         public override int Depth => 2;
 
-        public override void LoadFrom(Node source)
+        public override Type[] ApplicableComponents => new Type[] { typeof(InputInterface), typeof(OutputInterface) };
+
+        private INodeInterface component;
+
+        public override Position GetPosition()
         {
-            void InstantiateValueHooks (IEnumerable<IVariableHook> hooks, GameObject prefabObject, Transform parent) {
+            throw new NotImplementedException();
+        }
+
+        public override void LoadFrom(INodeComponent source)
+        {
+            component = source as INodeInterface;
+
+            void InstantiateValueHooks (IEnumerable<IVariableHook> hooks, GameObject prefabObject) {
                 foreach (var hook in hooks)
                 {
-                    InstantiateHook(hook, prefabObject, parent, TypeColors.GetColor(hook.ValueType));
+                    InstantiateHook(hook, prefabObject, transform, TypeColors.GetColor(hook.ValueType));
                 }
             }
 
@@ -44,34 +40,17 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.NodeComponents
                 hookAttachment.Initialize(hook, color);
             }
 
-            if (source is IHasInput input)
+            if (component is InputInterface input)
             {
-                InstantiateValueHooks(input.InputHooks, HookAttachment.LeftHookWidget.Get(), inputSide);
-            }else
-            {
-                Destroy(inputSide.gameObject);
+                InstantiateValueHooks(input.IOHooks, HookAttachment.LeftHookWidget.Get());
             }
 
-            if (source is IHasOutput output)
+            if (source is OutputInterface output)
             {
-                InstantiateValueHooks(output.OutputHooks, HookAttachment.RightHookWidget.Get(), outputSide);
-            }else
-            {
-                Destroy(outputSide.gameObject);
-            }
-
-            if (source is IFlowNode flowNode)
-            {
-                foreach (var hook in flowNode.PossibleRoutes)
-                {
-                    InstantiateHook(hook, FlowOutputHook.Get(), flowSide, Color.white);
-                }
-            }
-            else
-            {
-                Destroy(flowSide.gameObject);
+                InstantiateValueHooks(output.IOHooks, HookAttachment.RightHookWidget.Get());
             }
         }
+
     }
 
 }

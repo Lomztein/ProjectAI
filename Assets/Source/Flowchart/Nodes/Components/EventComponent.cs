@@ -10,20 +10,21 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Components {
     public class EventComponent : NodeComponent, IExecutable {
 
         private ChainInterface chainOut;
-        private OutputInterface output;
+        private readonly OutputInterface output;
+
+        public EventComponent (ChainInterface chainOut, OutputInterface valOut)
+        {
+            this.chainOut = chainOut;
+            output = valOut;
+        }
 
         public void Execute(ExecutionMetadata metadata) {
             chainOut.Hook.EnqueueAndExecuteNextNextNodes ();
         }
 
-        public override void Setup(Node parentNode)
-        {
-            chainOut = parentNode.GetOrAddInterface<ChainInterface>(Direction.Out);
-            output = parentNode.GetOrAddInterface<OutputInterface>(Direction.Out);
-        }
-
         public override void Init(Node parentNode)
         {
+            chainOut.Hook.OnExecute += Execute;
         }
     }
 }

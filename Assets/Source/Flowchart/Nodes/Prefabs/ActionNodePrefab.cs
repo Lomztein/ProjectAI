@@ -1,4 +1,5 @@
 ﻿using Lomztein.ProjectAI.Flowchart.Nodes.Components;
+using Lomztein.ProjectAI.Flowchart.Nodes.Interfaces;
 using Lomztein.ProjectAI.Flowchart.Nodes.Interfaces.Hooks;
 using Lomztein.ProjectAI.UI.Editor.ProgramEditor;
 using System;
@@ -25,13 +26,31 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Prefabs {
 
         public Node Create(Program parentProgram) {
 
-            ActionComponent action = new ActionComponent()
-                .SetAction(Action);
+            ChainInterface chainIn = new ChainInterface(Direction.In);
+            ChainInterface chainOut = new ChainInterface(Direction.Out);
+
+            InputInterface input = new InputInterface();
+            OutputInterface output = new OutputInterface();
+
+            ActionComponent action = new ActionComponent(chainIn, input, output, Action);
 
             InputHook[] inputs = new InputHook[Action.Inputs.Count];
             OutputHook[] outputs = new OutputHook[Action.Outputs.Count];
 
-            Node actionNode = new Node();
+            Node actionNode = new Node()
+                .SetSource(Identifier, 0)
+                .SetPosition(new VectorPosition(0, 0))
+                .SetProgram(parentProgram)
+                .SetName(Name)
+                .SetDesc(Description) as Node;
+
+            actionNode.AddComponent(chainIn);
+            actionNode.AddComponent(chainOut);
+
+            actionNode.AddComponent(input);
+            actionNode.AddComponent(output);
+
+            actionNode.AddComponent(action);
 
             for (int i = 0; i < Action.Inputs.Count; i++) {
                 inputs[i] = new InputHook ().SetType (Action.Inputs[i].Type).SetNode (actionNode).SetName (Action.Inputs[i].Name).SetProgram (parentProgram) as InputHook;
@@ -41,10 +60,11 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Prefabs {
                 outputs[i] = new OutputHook ().SetType (Action.Outputs[i].Type).SetNode (actionNode).SetName (Action.Outputs[i].Name).SetProgram (parentProgram) as OutputHook;
             }
 
+            input.SetHooks(inputs);
+            output.SetHooks(outputs);
 
-            /*action. (inputs);
-            action.SetOutputs (outputs);
-            */
+            actionNode.Init();
+
             return actionNode;
         }
     }

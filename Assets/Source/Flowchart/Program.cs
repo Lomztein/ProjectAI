@@ -8,6 +8,8 @@ using Lomztein.ProjectAI.Serialization;
 using Newtonsoft.Json.Linq;
 using Lomztein.ProjectAI.Flowchart.Nodes.Connections;
 using Lomztein.ProjectAI.Flowchart.Nodes.Interfaces.Hooks;
+using Lomztein.ProjectAI.Flowchart.Nodes.Interfaces;
+using Lomztein.ProjectAI.Flowchart.Nodes.Components;
 
 namespace Lomztein.ProjectAI.Flowchart {
 
@@ -29,11 +31,15 @@ namespace Lomztein.ProjectAI.Flowchart {
                 .SetName(eventName)
                 .SetDesc(eventDescription) as Node;
 
+            ChainInterface eventChain = new ChainInterface(Direction.Out);
+            OutputInterface eventOutput = new OutputInterface();
+            EventComponent eventComponent = new EventComponent(eventChain, eventOutput);
 
-            eventNode.SetOutputs(outputs);
+            eventNode.AddComponent(eventChain);
+            eventNode.AddComponent(eventOutput);
+            eventNode.AddComponent(eventComponent);
 
             eventNode.Init();
-            eventNode.InitChildren();
 
             foreach (OutputHook hook in outputs) {
                 hook.SetProgram (this);
@@ -43,18 +49,19 @@ namespace Lomztein.ProjectAI.Flowchart {
             return AddEvent (eventNode);
         }
 
-        public EventNode AddEvent (EventNode eventNode) {
+        public Node AddEvent (Node eventNode) {
             EventNodes.Add (eventNode);
             return eventNode;
         }
 
         public void ExecuteEvent(string eventName, params object[] arguments) {
-            EventNode eventNode = EventNodes.Find (x => x.Name == eventName);
+            Node eventNode = EventNodes.Find (x => x.Name == eventName);
 
-            for (int i = 0; i < eventNode.OutputHooks.Length; i++)
-                eventNode.OutputHooks[i].Value = arguments[i];
+            OutputInterface output = eventNode.GetComponent<OutputInterface>();
+            for (int i = 0; i < output.IOHooks.Count; i++)
+                output.IOHooks[i].Value = arguments[i];
 
-            Executor.CurrentExecutor.RootExecute (eventNode);
+            Executor.CurrentExecutor.RootExecute (eventNode.GetComponent<EventComponent>());
         }
 
         public void AddNode (Node node) {

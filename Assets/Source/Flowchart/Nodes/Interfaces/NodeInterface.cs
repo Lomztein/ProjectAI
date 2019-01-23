@@ -14,7 +14,7 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Interfaces
         public abstract List<IHook> InterfaceHooks { get; set; }
 
         public abstract void Delete();
-        public abstract void Init(Node parent, Direction direction);
+        public abstract void Init(Node parent);
 
         public virtual JObject Serialize() { return new JObject(); }
         public virtual void Deserialize(JObject source) { }

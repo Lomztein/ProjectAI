@@ -39,7 +39,7 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor {
 
         public void Awake() {
             CurrentEditor = this;
-            NodeWidgetComponents = NodeWidgetComponents.ToList().OrderBy(x => x.GetComponent<NodeComponent>().Depth).ToArray();
+            NodeWidgetComponents = NodeWidgetComponents.ToList().OrderBy(x => x.GetComponent<NodeWidgetComponent>().Depth).ToArray();
         }
 
         public void AddElement (WorkspaceElement element) {

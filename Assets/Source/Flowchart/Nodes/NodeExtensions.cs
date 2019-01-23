@@ -17,8 +17,5 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes {
             return null;
         }
 
-        public static ChainHook GetHook (this IFlowNode node, string name) {
-            return node.PossibleRoutes.First (x => x.Name == name);
-        }
     }
 }

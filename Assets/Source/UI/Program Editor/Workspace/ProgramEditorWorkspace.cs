@@ -1,7 +1,6 @@
 ﻿using Lomztein.ProjectAI.Flowchart.Nodes;
 using Lomztein.ProjectAI.Flowchart.Nodes.Connections;
-using Lomztein.ProjectAI.Flowchart.Nodes.Hooks;
-using Lomztein.ProjectAI.UI.Editor.ProgramEditor.Widgets.ValueWidgets;
+using Lomztein.ProjectAI.Flowchart.Nodes.Interfaces.Hooks;
 using Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.Attachments;
 using Lomztein.ProjectAI.Unity;
 using System;
@@ -13,7 +12,7 @@ using UnityEngine.EventSystems;
 
 namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor {
 
-    public class ProgramEditorWorkspace : MonoBehaviour, IDragHandler, IPointerClickHandler {
+    public class ProgramEditorWorkspace : MonoBehaviour, IDragHandler {
 
         // Resources
         public static Resource<GameObject> ConnectionElement = new Resource<GameObject> ("UI/Flowchart/ConnectionWidget");
@@ -66,42 +65,6 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor {
 
         public void OnDrag(PointerEventData eventData) {
             Debug.Log (eventData.button);
-        }
-
-        public void OnPointerClick(PointerEventData eventData) {
-            if (eventData.button == PointerEventData.InputButton.Left) {
-                if (CurrentSelectedHook != null && CurrentSelectedHook.Hook is InputHook)
-                    CreateValueWidgetFor (CurrentSelectedHook, CurrentSelectedHook.Hook as InputHook);
-            }
-        }
-
-        public GameObject FindCorrectValueWidget(Type type) {
-            foreach (GameObject obj in valueWidgets) {
-                IValueWidget widget = obj.GetComponent<IValueWidget> ();
-                if (widget.CompatableTypes.Contains (type))
-                    return obj;
-            }
-            return null;
-        }
-
-        public void CreateValueWidgetFor(HookAttachment inputWidget, InputHook inputHook) {
-            GameObject widgetPrefab = FindCorrectValueWidget (inputHook.ValueType);
-
-            object value = inputHook.ValueType.IsValueType ? Activator.CreateInstance (inputHook.ValueType) : null;
-
-            Console.WriteLine (value);
-
-            ValueNode valueNode = new ValueNode ().SetPosition (new VectorPosition (0, 0)).SetProgram (ProgramEditor.CurrentEditor.CurrentProgram) as ValueNode;
-            valueNode.InitChildren();
-
-            valueNode.SetValue(value).SetType(inputHook.ValueType);
-
-            GameObject newWidget = Instantiate (widgetPrefab, workspace.transform);
-            newWidget.transform.position = Input.mousePosition;
-            IValueWidget widget = newWidget.GetComponent<IValueWidget> ();
-
-            widget.Initialize (valueNode);
-            OnClickedHook (widget.OutputHookWidget);
         }
 
         public void OnClickedHook(HookAttachment hookWidget) {

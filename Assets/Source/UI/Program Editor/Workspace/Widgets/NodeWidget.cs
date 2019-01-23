@@ -1,7 +1,6 @@
 ﻿using Lomztein.ProjectAI.Flowchart;
 using Lomztein.ProjectAI.Flowchart.Nodes;
 using Lomztein.ProjectAI.Flowchart.Nodes.Flow;
-using Lomztein.ProjectAI.Flowchart.Nodes.Hooks;
 using Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.Attachments;
 using Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.NodeComponents;
 using Lomztein.ProjectAI.Unity;
@@ -17,7 +16,7 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.Widgets {
     public class NodeWidget : Widget {
 
         public static GameObject[] AvailableNodeComponents => ProgramEditor.CurrentEditor.NodeWidgetComponents;
-        public NodeComponent[] Components { get; private set; }
+        public NodeWidgetComponent[] Components { get; private set; }
 
         public Vector2 Position { get { return transform.position; } set { transform.position = value; } }
 
@@ -29,31 +28,49 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.Widgets {
         public Text nameHeader;
         public Button dragButton;
 
+        public RectTransform inInterface;
+        public RectTransform outInterface;
+        public RectTransform innerComponents;
+
         public void Initialize (Node node) {
 
             Node = node;
             Node.OnDeleted += () => { Destroy (gameObject); };
 
-            List<NodeComponent> createdComponents = new List<NodeComponent>();
-            foreach (GameObject possibleComponentObject in AvailableNodeComponents)
+            List<NodeWidgetComponent> createdComponents = new List<NodeWidgetComponent>();
+
+            foreach (INodeComponent component in Node.NodeComponents)
             {
-                NodeComponent possibleComponent = possibleComponentObject.GetComponent<NodeComponent>();
-                if (possibleComponent.IsApplicable(Node))
+                foreach (GameObject possibleComponentObject in AvailableNodeComponents)
                 {
-                    NodeComponent newComponent = Instantiate(possibleComponentObject, transform).GetComponent<NodeComponent>();
-                    newComponent.ParentWidget = this;
-                    newComponent.LoadFrom(Node);
-                    createdComponents.Add(newComponent);
+                    NodeWidgetComponent possibleComponent = possibleComponentObject.GetComponent<NodeWidgetComponent>();
+                    if (possibleComponent.IsApplicable(component))
+                    {
+                        NodeWidgetComponent newComponent = Instantiate(possibleComponentObject).GetComponent<NodeWidgetComponent>();
+                        newComponent.ParentWidget = this;
+                        newComponent.LoadFrom(component);
+                        createdComponents.Add(newComponent);
+
+                        Transform position = null;
+                        switch (newComponent.GetPosition ())
+                        {
+                            case NodeWidgetComponent.Position.In:
+                                position = inInterface;
+                                break;
+
+                            case NodeWidgetComponent.Position.Inner:
+                                position = innerComponents;
+                                break;
+
+                            case NodeWidgetComponent.Position.Out:
+                                position = outInterface;
+                                break;
+                        }
+
+                        newComponent.transform.SetParent(position);
+                    }
                 }
-            }
-            Components = createdComponents.ToArray();
-
-        }
-
-        private void CreateIOHooks (RectTransform parent, GameObject prefab, IVariableHook[] hooks) {
-            foreach (var io in hooks) {
-                GameObject newHook = Instantiate (prefab, parent);
-                newHook.GetComponent<HookAttachment> ().Initialize (io as IHook, TypeColors.GetColor (io.ValueType));
+                Components = createdComponents.ToArray();
             }
         }
 

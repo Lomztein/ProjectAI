@@ -11,15 +11,17 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Components {
 
         private ChainInterface chainIn;
 
-        private InputInterface input;
-        private OutputInterface output;
+        private readonly InputInterface input;
+        private readonly OutputInterface output;
 
         public ProgramAction Action { get; set; }
 
-        public ActionComponent SetAction (ProgramAction action)
+        public ActionComponent (ChainInterface chainIn, InputInterface input, OutputInterface output, ProgramAction action)
         {
+            this.chainIn = chainIn;
+            this.input = input;
+            this.output = output;
             Action = action;
-            return this;
         }
 
         public void Execute(ExecutionMetadata metadata) {
@@ -28,14 +30,6 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Components {
 
         public void Delete() {
             chainIn.Hook.OnExecute -= (data) => Execute(data);
-        }
-
-        public override void Setup(Node parentNode)
-        {
-            chainIn = parentNode.GetOrAddInterface<ChainInterface>(Direction.In);
-
-            input = parentNode.GetOrAddInterface<InputInterface>(Direction.In);
-            output = parentNode.GetOrAddInterface<OutputInterface>(Direction.Out);
         }
 
         public override void Init(Node parentNode)

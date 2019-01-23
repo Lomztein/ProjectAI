@@ -1,7 +1,7 @@
 ﻿using Lomztein.ProjectAI.Flowchart;
 using Lomztein.ProjectAI.Flowchart.Nodes;
 using Lomztein.ProjectAI.Flowchart.Nodes.Flow;
-using Lomztein.ProjectAI.Flowchart.Nodes.Hooks;
+using Lomztein.ProjectAI.Flowchart.Nodes.Interfaces.Hooks;
 using Lomztein.ProjectAI.Flowchart.Nodes.Prefabs;
 using Lomztein.ProjectAI.UI.Editor.ProgramEditor;
 using System.Collections.Generic;
@@ -90,9 +90,6 @@ namespace Lomztein.ProjectAI.Unit {
             new ActionNodePrefab ("Turn", "Turn a direction", "Unit.Turn", new ProgramAction ((input, output) => Rotate (input.Get<int> ("Sign"))).AddInput (typeof (int), "Sign", "Sign of the direction to turn.")),
             new ActionNodePrefab ("Fly", "Begone, thot!", "Unit.Fly", new ProgramAction ((input, output) => transform.Translate (Vector3.up * input.Get<float>("Speed") * Time.deltaTime)).AddInput (typeof (float), "Speed", "The speed of begoneness")),
             // End of movement test actions.
-
-            new FlowNodePrefab (typeof (IfFlowNode), "If", "Control flow of execution with a bool value."),
-            new FlowNodePrefab (typeof (DurationFlowNode), "Duration", "Execute something for a duration."),
             });
         }
 

@@ -9,8 +9,6 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes
 {
     public interface INodeComponent : IJsonSerializable
     {
-        void Setup(Node parentNode);
-
         void Init(Node parentNode);
     }
 }

@@ -1,39 +1,47 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Lomztein.ProjectAI.Flowchart;
 using Lomztein.ProjectAI.Flowchart.Nodes;
+using Lomztein.ProjectAI.Flowchart.Nodes.Interfaces;
 using Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.Attachments;
 using UnityEngine;
 
 namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.NodeComponents
 {
-    public class ChainIO : NodeComponent
+    public class ChainIO : NodeWidgetComponent
     {
+        private ChainInterface component;
+
         public HookAttachment Input;
         public HookAttachment Output;
 
-        public override Type[] ApplicableTypes => new Type[]
+        public override Type[] ApplicableComponents => new Type[]
         {
-            typeof (INextNode),
-            typeof (IPrevNode),
+            typeof (ChainInterface),
         };
 
         public override int Depth => -1;
 
-        public override void LoadFrom(Node source)
+        public override Position GetPosition()
         {
-            if (source is INextNode next)
+            return (Position)component.Direction;
+        }
+
+        public override void LoadFrom(INodeComponent source)
+        {
+            component = source as ChainInterface;
+
+            if (component.Direction == Direction.In)
             {
-                Input.Initialize(next.PreviousHook, Color.white);
+                Input.Initialize(component.Hook, Color.white);
             }else
             {
                 Destroy(Input.gameObject);
             }
 
-            if (source is IPrevNode prev)
+            if (component.Direction == Direction.Out)
             {
-                Output.Initialize(prev.NextHook, Color.white);
+                Output.Initialize(component.Hook, Color.white);
             } else
             {
                 Destroy(Output.gameObject);

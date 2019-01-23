@@ -9,8 +9,6 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Components
 {
     public abstract class NodeComponent : INodeComponent
     {
-        public abstract void Setup(Node parentNode);
-
         public abstract void Init(Node parentNode);
 
         public virtual JObject Serialize() { return new JObject(); }
