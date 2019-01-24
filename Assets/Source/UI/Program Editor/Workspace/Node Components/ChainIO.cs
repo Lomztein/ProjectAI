@@ -10,8 +10,6 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.NodeComponents
 {
     public class ChainIO : NodeWidgetComponent
     {
-        private ChainInterface component;
-
         public HookAttachment Input;
         public HookAttachment Output;
 
@@ -22,26 +20,22 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.NodeComponents
 
         public override int Depth => -1;
 
-        public override Position GetPosition()
+        public override void LoadFrom(Node source)
         {
-            return (Position)component.Direction;
-        }
+            ChainInterface inInterface = source.GetComponent<ChainInterface>(x => x.Direction == Direction.In);
+            ChainInterface outInterface = source.GetComponent<ChainInterface>(x => x.Direction == Direction.Out);
 
-        public override void LoadFrom(INodeComponent source)
-        {
-            component = source as ChainInterface;
-
-            if (component.Direction == Direction.In)
+            if (inInterface != null)
             {
-                Input.Initialize(component.Hook, Color.white);
+                Input.Initialize(inInterface.Hook, Color.white);
             }else
             {
                 Destroy(Input.gameObject);
             }
 
-            if (component.Direction == Direction.Out)
+            if (outInterface != null)
             {
-                Output.Initialize(component.Hook, Color.white);
+                Output.Initialize(outInterface.Hook, Color.white);
             } else
             {
                 Destroy(Output.gameObject);

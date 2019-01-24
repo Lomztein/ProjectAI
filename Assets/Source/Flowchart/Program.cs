@@ -33,18 +33,22 @@ namespace Lomztein.ProjectAI.Flowchart {
 
             ChainInterface eventChain = new ChainInterface(Direction.Out);
             OutputInterface eventOutput = new OutputInterface();
+            eventOutput.SetHooks(outputs);
+
             EventComponent eventComponent = new EventComponent(eventChain, eventOutput);
 
             eventNode.AddComponent(eventChain);
             eventNode.AddComponent(eventOutput);
+
             eventNode.AddComponent(eventComponent);
 
-            eventNode.Init();
-
-            foreach (OutputHook hook in outputs) {
-                hook.SetProgram (this);
-                hook.SetNode (eventNode); 
+            foreach (OutputHook hook in outputs)
+            {
+                hook.SetProgram(this);
+                hook.SetNode(eventNode);
             }
+
+            eventNode.Init();
 
             return AddEvent (eventNode);
         }

@@ -28,50 +28,27 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.Widgets {
         public Text nameHeader;
         public Button dragButton;
 
-        public RectTransform inInterface;
-        public RectTransform outInterface;
-        public RectTransform innerComponents;
-
-        public void Initialize (Node node) {
-
+        public void Initialize(Node node)
+        {
             Node = node;
-            Node.OnDeleted += () => { Destroy (gameObject); };
+            Node.OnDeleted += () => { Destroy(gameObject); };
 
             List<NodeWidgetComponent> createdComponents = new List<NodeWidgetComponent>();
 
-            foreach (INodeComponent component in Node.NodeComponents)
+            foreach (GameObject possibleComponentObject in AvailableNodeComponents)
             {
-                foreach (GameObject possibleComponentObject in AvailableNodeComponents)
+                NodeWidgetComponent possibleComponent = possibleComponentObject.GetComponent<NodeWidgetComponent>();
+                if (possibleComponent.IsApplicable(node))
                 {
-                    NodeWidgetComponent possibleComponent = possibleComponentObject.GetComponent<NodeWidgetComponent>();
-                    if (possibleComponent.IsApplicable(component))
-                    {
-                        NodeWidgetComponent newComponent = Instantiate(possibleComponentObject).GetComponent<NodeWidgetComponent>();
-                        newComponent.ParentWidget = this;
-                        newComponent.LoadFrom(component);
-                        createdComponents.Add(newComponent);
+                    NodeWidgetComponent newComponent = Instantiate(possibleComponentObject).GetComponent<NodeWidgetComponent>();
+                    newComponent.ParentWidget = this;
+                    newComponent.LoadFrom(node);
+                    createdComponents.Add(newComponent);
 
-                        Transform position = null;
-                        switch (newComponent.GetPosition ())
-                        {
-                            case NodeWidgetComponent.Position.In:
-                                position = inInterface;
-                                break;
-
-                            case NodeWidgetComponent.Position.Inner:
-                                position = innerComponents;
-                                break;
-
-                            case NodeWidgetComponent.Position.Out:
-                                position = outInterface;
-                                break;
-                        }
-
-                        newComponent.transform.SetParent(position);
-                    }
+                    newComponent.transform.SetParent(transform);
                 }
-                Components = createdComponents.ToArray();
             }
+            Components = createdComponents.ToArray();
         }
 
         public void OnMove() {

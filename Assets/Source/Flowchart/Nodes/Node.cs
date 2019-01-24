@@ -74,9 +74,16 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes {
             NodeComponents.Add(component);
         }
 
-        public T GetComponent<T>() where T : INodeComponent
+        public T GetComponent<T>() where T : INodeComponent => GetComponent<T>(x => true);
+
+        public T GetComponent<T>(Predicate<T> filter)
         {
-            return (T)NodeComponents.Find(x => x.GetType().IsEquivalentTo(typeof(T)));
+            return (T)NodeComponents.Find(x => x.GetType().IsEquivalentTo(typeof(T)) && filter((T)x));
+        }
+
+        public bool HasComponent (Type componentType)
+        {
+            return NodeComponents.Find(x => x.GetType().IsEquivalentTo(componentType)) != null;
         }
 
         public int GetHookIndex(IHook hook) => AllHooks.IndexOf(hook);

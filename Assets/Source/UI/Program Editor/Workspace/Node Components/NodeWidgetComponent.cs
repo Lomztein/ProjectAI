@@ -13,12 +13,9 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.NodeComponents
 
         public NodeWidget ParentWidget { get; set; }
 
-        public abstract void LoadFrom(INodeComponent source);
+        public abstract void LoadFrom(Node source);
 
-        public enum Position { In = -1, Inner = 0, Out = 1 }
-        public abstract Position GetPosition();
-
-        public bool IsApplicable (object obj)
-            => ApplicableComponents.Any(x => x.IsInstanceOfType(obj));
+        public bool IsApplicable (Node obj)
+            => ApplicableComponents.Any(x => obj.HasComponent (x) || x.IsInstanceOfType (obj));
     }
 }

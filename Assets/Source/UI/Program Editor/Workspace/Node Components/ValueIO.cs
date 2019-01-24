@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Lomztein.ProjectAI.Flowchart.Nodes;
+using Lomztein.ProjectAI.Flowchart.Nodes.Flow;
 using Lomztein.ProjectAI.Flowchart.Nodes.Interfaces;
 using Lomztein.ProjectAI.Flowchart.Nodes.Interfaces.Hooks;
 using Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.Attachments;
@@ -13,23 +14,19 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.NodeComponents
     {
         public override int Depth => 2;
 
+        public RectTransform valueIn;
+        public RectTransform valueOut;
+        public RectTransform flowOut;
+
         public override Type[] ApplicableComponents => new Type[] { typeof(InputInterface), typeof(OutputInterface) };
 
-        private INodeInterface component;
-
-        public override Position GetPosition()
+        public override void LoadFrom(Node source)
         {
-            throw new NotImplementedException();
-        }
-
-        public override void LoadFrom(INodeComponent source)
-        {
-            component = source as INodeInterface;
-
-            void InstantiateValueHooks (IEnumerable<IVariableHook> hooks, GameObject prefabObject) {
+            void InstantiateValueHooks (IEnumerable<IVariableHook> hooks, GameObject prefabObject, Transform parent) {
                 foreach (var hook in hooks)
                 {
-                    InstantiateHook(hook, prefabObject, transform, TypeColors.GetColor(hook.ValueType));
+                    Debug.Log("Instantiating hook at this parent!", parent);
+                    InstantiateHook(hook, prefabObject, parent, TypeColors.GetColor(hook.ValueType));
                 }
             }
 
@@ -40,14 +37,24 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.NodeComponents
                 hookAttachment.Initialize(hook, color);
             }
 
-            if (component is InputInterface input)
+            InputInterface input = source.GetComponent<InputInterface>(x => x.Direction == Direction.In);
+            if (input != null)
             {
-                InstantiateValueHooks(input.IOHooks, HookAttachment.LeftHookWidget.Get());
+                InstantiateValueHooks(input.IOHooks, HookAttachment.LeftHookWidget.Get(), valueIn);
+            }
+            else
+            {
+                Destroy(valueIn.gameObject);
             }
 
-            if (source is OutputInterface output)
+            OutputInterface output = source.GetComponent<OutputInterface>(x => x.Direction == Direction.Out);
+            if (output != null)
             {
-                InstantiateValueHooks(output.IOHooks, HookAttachment.RightHookWidget.Get());
+                InstantiateValueHooks(output.IOHooks, HookAttachment.RightHookWidget.Get(), valueOut);
+            }
+            else
+            {
+                Destroy(valueOut.gameObject);
             }
         }
 

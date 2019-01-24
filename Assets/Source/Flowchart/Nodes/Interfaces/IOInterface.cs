@@ -31,7 +31,7 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Interfaces
             if (InterfaceHooks.Count > 0)
                 throw new InvalidOperationException("Input has already been set!");
 
-            IOHooks.AddRange(inputs);
+            InterfaceHooks.AddRange(inputs.Cast<IHook>());
             return this;
         }
 

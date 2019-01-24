@@ -77,7 +77,7 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor {
                 sign.button.onClick.AddListener (() => { ActiveErrorSigns.Remove (exceptionElement); });
             }
 
-            Debug.LogError ("Flowchart exception was caught - " + exception.Message, exceptionElement);
+            Debug.LogWarning ("Flowchart exception was caught - " + exception.Message, exceptionElement);
         }
 
         private void CreateEventList() {
