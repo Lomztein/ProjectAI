@@ -16,7 +16,7 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Interfaces
         public abstract void Delete();
         public abstract void Init(Node parent);
 
-        public virtual JObject Serialize() { return new JObject(); }
-        public virtual void Deserialize(JObject source) { }
+        public virtual JToken Serialize() { return new JObject(); }
+        public virtual void Deserialize(JToken source) { }
     }
 }

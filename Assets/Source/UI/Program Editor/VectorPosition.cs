@@ -33,13 +33,13 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor {
             }
         }
 
-        public void Deserialize(JObject source)
+        public void Deserialize(JToken source)
         {
-            X = source.GetValue ("X").ToObject<double>();
-            Y = source.GetValue ("Y").ToObject<double>();
+            X = (source as JObject).GetValue ("X").ToObject<double>();
+            Y = (source as JObject).GetValue ("Y").ToObject<double>();
         }
 
-        public JObject Serialize()
+        public JToken Serialize()
         {
             return new JObject()
             {

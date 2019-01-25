@@ -33,6 +33,7 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Prefabs {
             OutputInterface output = new OutputInterface();
 
             ActionComponent action = new ActionComponent(chainIn, input, output, Action);
+            ChainLinkComponent chainLink = new ChainLinkComponent(chainIn, chainOut);
 
             InputHook[] inputs = new InputHook[Action.Inputs.Count];
             OutputHook[] outputs = new OutputHook[Action.Outputs.Count];
@@ -51,6 +52,7 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Prefabs {
             actionNode.AddComponent(output);
 
             actionNode.AddComponent(action);
+            actionNode.AddComponent(chainLink);
 
             for (int i = 0; i < Action.Inputs.Count; i++) {
                 inputs[i] = new InputHook ().SetType (Action.Inputs[i].Type).SetNode (actionNode).SetName (Action.Inputs[i].Name).SetProgram (parentProgram) as InputHook;

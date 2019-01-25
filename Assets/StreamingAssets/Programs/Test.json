@@ -8,7 +8,12 @@
       "Position": {
         "X": 0.0,
         "Y": 0.0
-      }
+      },
+      "Components": [
+        {},
+        {},
+        {}
+      ]
     },
     {
       "PrefabIdentifier": null,
@@ -16,7 +21,12 @@
       "Position": {
         "X": 0.0,
         "Y": 0.0
-      }
+      },
+      "Components": [
+        {},
+        {},
+        {}
+      ]
     },
     {
       "PrefabIdentifier": null,
@@ -24,7 +34,12 @@
       "Position": {
         "X": 0.0,
         "Y": 0.0
-      }
+      },
+      "Components": [
+        {},
+        {},
+        {}
+      ]
     },
     {
       "PrefabIdentifier": null,
@@ -32,75 +47,34 @@
       "Position": {
         "X": 0.0,
         "Y": 0.0
-      }
+      },
+      "Components": [
+        {},
+        {},
+        {}
+      ]
     },
     {
-      "PrefabIdentifier": "Unit.MoveForwards",
+      "PrefabIdentifier": "Math.Add",
       "PrefabSourceIndex": 0,
       "Position": {
         "X": 0.0,
         "Y": 0.0
-      }
-    },
-    {
-      "PrefabIdentifier": "Unit.Turn",
-      "PrefabSourceIndex": 0,
-      "Position": {
-        "X": 0.0,
-        "Y": 0.0
-      }
-    },
-    {
-      "PrefabIdentifier": "Turret.TargetPos",
-      "PrefabSourceIndex": 0,
-      "Position": {
-        "X": 0.0,
-        "Y": 0.0
-      }
+      },
+      "Components": [
+        {},
+        {},
+        {
+          "Constants": [
+            0.0,
+            0.0
+          ]
+        },
+        {},
+        {},
+        {}
+      ]
     }
   ],
-  "Connections": [
-    {
-      "FromNode": 1,
-      "FromHook": 0,
-      "ToNode": 5,
-      "ToHook": 0
-    },
-    {
-      "FromNode": 1,
-      "FromHook": 1,
-      "ToNode": 5,
-      "ToHook": 2
-    },
-    {
-      "FromNode": 1,
-      "FromHook": 1,
-      "ToNode": 4,
-      "ToHook": 1
-    },
-    {
-      "FromNode": -1,
-      "FromHook": 0,
-      "ToNode": 6,
-      "ToHook": 0
-    },
-    {
-      "FromNode": -1,
-      "FromHook": 0,
-      "ToNode": 6,
-      "ToHook": 1
-    },
-    {
-      "FromNode": -1,
-      "FromHook": 0,
-      "ToNode": 6,
-      "ToHook": 2
-    },
-    {
-      "FromNode": 5,
-      "FromHook": 1,
-      "ToNode": 6,
-      "ToHook": 4
-    }
-  ]
+  "Connections": []
 }

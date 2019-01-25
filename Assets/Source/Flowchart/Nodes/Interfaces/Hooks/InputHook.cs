@@ -1,5 +1,7 @@
 ﻿using Lomztein.ProjectAI.Flowchart.Exceptions;
 using Lomztein.ProjectAI.Flowchart.Nodes.Connections;
+using Lomztein.ProjectAI.Serialization;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +10,9 @@ using UnityEngine;
 
 namespace Lomztein.ProjectAI.Flowchart.Nodes.Interfaces.Hooks {
 
-    public class InputHook : Hook, IVariableHook {
+    public class InputHook : Hook, IVariableHook, IJsonSerializable {
+
+        private object constant;
 
         public OutputHook ConnectedOutput { get {
                 try {
@@ -51,12 +55,27 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Interfaces.Hooks {
         {
             SetDirection(Direction.In);
             SetMaxConnections(1);
+
+            if (Nullable.GetUnderlyingType (ValueType) == null)
+            {
+                constant = Activator.CreateInstance(ValueType);
+            }
         }
 
         public InputHook SetType (Type type)
         {
             ValueType = type;
             return this;
+        }
+
+        public JToken Serialize()
+        {
+            return new JValue (constant);
+        }
+
+        public void Deserialize(JToken source)
+        {
+            constant = source.ToObject(ValueType);
         }
     }
 }

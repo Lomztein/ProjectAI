@@ -47,8 +47,7 @@ namespace Lomztein.ProjectAI.Flowchart {
                 program.ExecuteEvent ("Tick", Time.fixedDeltaTime);
             }
 
-            if (OnTick != null)
-                OnTick (Time.fixedDeltaTime);
+            OnTick?.Invoke (Time.fixedDeltaTime);
         }
 
         public void RootExecute (IExecutable executable) {

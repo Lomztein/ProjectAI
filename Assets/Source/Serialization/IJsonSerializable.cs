@@ -4,8 +4,8 @@ namespace Lomztein.ProjectAI.Serialization
 {
     public interface IJsonSerializable
     {
-        JObject Serialize();
+        JToken Serialize();
 
-        void Deserialize(JObject source);
+        void Deserialize(JToken source);
     }
 }

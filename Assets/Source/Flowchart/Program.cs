@@ -10,6 +10,8 @@ using Lomztein.ProjectAI.Flowchart.Nodes.Connections;
 using Lomztein.ProjectAI.Flowchart.Nodes.Interfaces.Hooks;
 using Lomztein.ProjectAI.Flowchart.Nodes.Interfaces;
 using Lomztein.ProjectAI.Flowchart.Nodes.Components;
+using Lomztein.ProjectAI.Flowchart.Nodes.Prefabs;
+using System;
 
 namespace Lomztein.ProjectAI.Flowchart {
 
@@ -22,6 +24,9 @@ namespace Lomztein.ProjectAI.Flowchart {
         public List<IConnection> AllConnections { get; private set; } = new List<IConnection>();
 
         public List<Node> EventNodes { get; private set; } = new List<Node>();
+
+        public event Action<Node> OnNodeInstantiated;
+        public event Action<IConnection> OnConnectionInstantiated;
 
         public Node AddEvent (string eventName, string eventDescription, params OutputHook[] outputs) {
 
@@ -76,6 +81,28 @@ namespace Lomztein.ProjectAI.Flowchart {
             return AllNodes.Remove (node);
         }
 
+        // TODO: Route node and connection instantiating through these two methods, as to have a single, centralized method for creating, initializing and storing.
+        public Node InstantiateNode (INodePrefab nodePrefab)
+        {
+            Node node = nodePrefab.Create(this);
+            AddNode(node);
+            node.Init();
+
+            OnNodeInstantiated?.Invoke (node);
+            return node;
+        }
+
+        public IConnection InstantiateConnection (IHook from, IHook to)
+        {
+            IConnection connection = from.CreateConnection();
+            connection.Connect(from, to);
+            AddConnection(connection);
+            connection.Init();
+
+            OnConnectionInstantiated?.Invoke(connection);
+            return connection;
+        }
+
         public void AddConnection(IConnection connection) => AllConnections.Add(connection);
 
         public bool RemoveConnection(IConnection connection) => AllConnections.Remove(connection);
@@ -85,7 +112,7 @@ namespace Lomztein.ProjectAI.Flowchart {
             this.Save(Application.dataPath + "/StreamingAssets/Programs/" + Name + ".json");
         }
 
-        public JObject Serialize()
+        public JToken Serialize()
         {
             return new JObject
             {
@@ -96,7 +123,7 @@ namespace Lomztein.ProjectAI.Flowchart {
             };
         }
 
-        public void Deserialize(JObject source)
+        public void Deserialize(JToken source)
         {
             throw new System.NotImplementedException();
         }

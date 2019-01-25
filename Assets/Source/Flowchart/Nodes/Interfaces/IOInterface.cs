@@ -1,6 +1,7 @@
 ﻿using Lomztein.ProjectAI.Flowchart.Nodes;
 using Lomztein.ProjectAI.Flowchart.Nodes.Interfaces;
 using Lomztein.ProjectAI.Flowchart.Nodes.Interfaces.Hooks;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,6 +51,22 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Interfaces
             return (T)GetHook (name).GetValue<T>();
         }
 
+        public override JToken Serialize()
+        {
+            return new JObject()
+            {
+                {"Constants", new JArray (IOHooks.Select (x => x.Serialize ())) }
+            };
+        }
+
+        public override void Deserialize(JToken source)
+        {
+            JArray array = (source as JObject).GetValue("Constants") as JArray;
+            for (int i = 0; i < array.Count; i++)
+            {
+                (InterfaceHooks[i] as InputHook).Deserialize(array[i] as JObject);
+            }
+        }
 
     }
 

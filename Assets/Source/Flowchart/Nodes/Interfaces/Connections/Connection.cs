@@ -33,12 +33,12 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Connections {
             OnDeleted += () => ParentProgram.RemoveConnection(this);
         }
 
-        public void Deserialize(JObject source)
+        public void Deserialize(JToken source)
         {
             throw new InvalidOperationException("Connections shouldn't be deserialized directly, but instead reconnected on program deserialization.");
         }
 
-        public JObject Serialize()
+        public JToken Serialize()
         {
             return new JObject()
             {

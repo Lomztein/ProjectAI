@@ -11,7 +11,7 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Components
     {
         public abstract void Init(Node parentNode);
 
-        public virtual JObject Serialize() { return new JObject(); }
-        public virtual void Deserialize(JObject source) { }
+        public virtual JToken Serialize() { return new JObject(); }
+        public virtual void Deserialize(JToken source) { }
     }
 }

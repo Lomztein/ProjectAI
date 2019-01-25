@@ -25,7 +25,6 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.NodeComponents
             void InstantiateValueHooks (IEnumerable<IVariableHook> hooks, GameObject prefabObject, Transform parent) {
                 foreach (var hook in hooks)
                 {
-                    Debug.Log("Instantiating hook at this parent!", parent);
                     InstantiateHook(hook, prefabObject, parent, TypeColors.GetColor(hook.ValueType));
                 }
             }

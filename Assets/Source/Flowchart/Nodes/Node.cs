@@ -48,7 +48,7 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes {
             OnDeleted?.Invoke();
         }
 
-        public JObject Serialize()
+        public JToken Serialize()
         {
             return new JObject
             {
@@ -59,13 +59,13 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes {
             };
         }
 
-        public void Deserialize(JObject source)
+        public void Deserialize(JToken source)
         {
-            Position.Deserialize(source.GetValue("Position") as JObject);
-            JArray components = source.GetValue("Components") as JArray;
+            Position.Deserialize((source as JObject).GetValue("Position"));
+            JArray components = (source as JObject).GetValue("Components") as JArray;
             for (int i = 0; i < components.Count; i++)
             {
-                NodeComponents[i].Deserialize(components[i] as JObject);
+                NodeComponents[i].Deserialize(components[i]);
             }
         }
 
