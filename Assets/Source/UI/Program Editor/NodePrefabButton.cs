@@ -35,10 +35,7 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor {
         }
 
         private void OnClicked () {
-            Node createdNode = Prefab.Create (ProgramEditor.CurrentEditor.CurrentProgram);
-            GameObject newNodeWidget = Instantiate (NodeElement.Get (), ParentWorkspace);
-            NodeWidget nodeWidget = newNodeWidget.GetComponent<NodeWidget> ();
-            nodeWidget.Initialize (createdNode);
+            ProgramEditor.CurrentEditor.CurrentProgram.InstantiateNode(Prefab);
         }
 
     }

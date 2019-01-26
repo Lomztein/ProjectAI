@@ -11,10 +11,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using Lomztein.ProjectAI.UI.Editor.ProgramEditor.Workspace.NodeComponents;
+using Lomztein.ProjectAI.Flowchart.Nodes;
+using Lomztein.ProjectAI.Flowchart.Nodes.Connections;
 
 namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor {
 
     public class ProgramEditor : MonoBehaviour {
+
+        // TODO: Rework ProgramEditor and Workspace to be destinctly seperate, but layered entities, allowing for multiple workspaces per editor, for instance.
         
         // Resources.
         public static Resource<GameObject> PrefabButtonElement = new Resource<GameObject> ("UI/Flowchart/NodePrefabButton");
@@ -66,6 +70,32 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor {
             }
 
             Executor.CurrentExecutor.OnFlowchartException += OnFlowchartExceptionCaught;
+
+            CurrentProgram.OnNodeInstantiated += OnNodeInstantiated;
+            CurrentProgram.OnConnectionInstantiated += OnConnectionInstantiated;
+        }
+
+        private void OnNodeInstantiated (Node node)
+        {
+            InstantiateNodeWidget(node);
+        }
+
+        private void InstantiateNodeWidget(Node node)
+        {
+            GameObject nodeWidgetObj = Instantiate(NodeWidget.Get(), workspace.workspace);
+            node.SetPosition(new LinkedTransformPosition(nodeWidgetObj.transform));
+            NodeWidget nodeWidget = nodeWidgetObj.GetComponent<NodeWidget>();
+            nodeWidget.Initialize(node);
+        }
+
+        private void OnConnectionInstantiated (IConnection connection)
+        {
+            InstantiateConnectionWidget(connection);
+        }
+
+        private void InstantiateConnectionWidget (IConnection connection)
+        {
+
         }
 
         private void OnFlowchartExceptionCaught(FlowchartException exception) {

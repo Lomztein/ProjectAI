@@ -40,7 +40,6 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Prefabs {
 
             Node actionNode = new Node()
                 .SetSource(Identifier, 0)
-                .SetPosition(new VectorPosition(0, 0))
                 .SetProgram(parentProgram)
                 .SetName(Name)
                 .SetDesc(Description) as Node;

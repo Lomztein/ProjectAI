@@ -6,30 +6,31 @@ using UnityEngine;
 
 namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor {
 
-    public class VectorPosition : INodePosition {
+    public class LinkedTransformPosition : INodePosition {
 
-        private Vector2 position;
+        private readonly Transform transform;
 
-        public VectorPosition (float x, float y) {
-            position = new Vector2 (x, y);
+        public LinkedTransformPosition(Transform _transform)
+        {
+            transform = _transform;
         }
 
         public double X {
             get {
-                return position.x;
+                return transform.position.x;
             }
 
             set {
-                position.x = (float)value;
+                transform.position.Set ((float)value, transform.position.y, transform.position.z);
             }
         }
 
         public double Y {
             get {
-                return position.y;
+                return transform.position.y;
             }
             set {
-                position.y = (float)value;
+                transform.position.Set (transform.position.x, (float)value, transform.position.z);
             }
         }
 

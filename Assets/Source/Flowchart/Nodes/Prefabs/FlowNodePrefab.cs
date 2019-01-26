@@ -25,7 +25,6 @@ namespace Lomztein.ProjectAI.Flowchart.Nodes.Prefabs {
         public Node Create(Program parentProgram) {
             Node node = new Node()
                 .SetSource(Identifier, 0)
-                .SetPosition(new VectorPosition(0, 0))
                 .SetProgram(parentProgram) as Node;
 
             return node;

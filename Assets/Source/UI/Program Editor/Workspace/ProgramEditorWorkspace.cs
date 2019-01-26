@@ -52,11 +52,7 @@ namespace Lomztein.ProjectAI.UI.Editor.ProgramEditor {
             Rect finalSize = new Rect ();
 
             foreach (IWorkspaceAnchor anchor in Anchors) {
-
                 Bounds bounds = anchor.GetBounds ();
-
-
-
             }
 
             Debug.Log (finalSize);
